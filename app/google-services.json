@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "852786203192",
+    "firebase_url": "https://talent-power-4297b-default-rtdb.firebaseio.com",
+    "project_id": "talent-power-4297b",
+    "storage_bucket": "talent-power-4297b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852786203192:android:a24f0a218519b3ab2f34cd",
+        "android_client_info": {
+          "package_name": "sgt.usa.app.talentpower"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852786203192-ikti97a5bkmn54tquodqpef862r92uh0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-ttbaRgL_LRT-_gutZ5v0RSKLWLvCG7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852786203192-ikti97a5bkmn54tquodqpef862r92uh0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852786203192:android:eb4a3168694cc94c2f34cd",
+        "android_client_info": {
+          "package_name": "stg.talentpower.usa.app.talentpowerandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852786203192-ikti97a5bkmn54tquodqpef862r92uh0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-ttbaRgL_LRT-_gutZ5v0RSKLWLvCG7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852786203192-ikti97a5bkmn54tquodqpef862r92uh0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

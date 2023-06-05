@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">Talent Power App</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
+    <string name="txt_Login_Correo">Correo</string>
+    <string name="txt_Login_Contraseña">Contraseña</string>
+    <string name="txt_Button_Login_Ingresar">Ingresar</string>
+    <string name="ingresa_Correo">Ingresa un correo</string>
+    <string name="correo_no_Valido">Porfavor ingresa un correo valido</string>
+    <string name="ingresa_Contraseña">Ingresa una contraseña</string>
+    <string name="menu_inicio_employess">Inicio</string>
+    <string name="menu_notificaciones_employess">Notificaciones</string>
+    <string name="menu_config_employess">Configuracion</string>
+    <string name="internet_activado">Conexion a internet restaurada</string>
+    <string name="internet_desactivado">Sin conexion a internet</string>
+    <string name="nombre_registrar_empleado">Nombre</string>
+    <string name="telefono_registrar_empleado">Telefono</string>
+    <string name="puesto_registrar_empleado">Puesto</string>
+    <string name="foto_registrar_empleado">Foto</string>
+    <string name="contraseña_registrar_empleado">Contraseña</string>
+    <string name="correo_registrar_empleado">Correo</string>
+
+
+    <string name="btn_agregar_empleado">Agregar Chofer</string>
+    <string name="btn_agregar_chofer">Agregar Chofer</string>
+    <string name="btn_agregar_ruta">Agregar Ruta</string>
+    <string name="btn_agregar_cliente">Agregar Cliente</string>
+
+    <!-- Fragment Add Driver -->
+    <string name="tf_name_driver">Nombre</string>
+    <string name="tf_address_driver">Direccion</string>
+    <string name="tf_phone_driver">Telefono</string>
+    <string name="tf_emergency_phone_driver">Telefono de emergencia</string>
+    <string name="tf_NSS_driver">NSS</string>
+    <string name="tf_bank_driver">Clave de Banco</string>
+    <string name="tf_email_driver">Correo</string>
+    <string name="tf_password_driver">Contraseña</string>
+    <string name="btn_guardar">Guardar</string>
+    <string name="btn_licencia_driver">Licencia</string>
+    <string name="btn_acta_driver">Acta Naciemiento</string>
+    <string name="btn_cert_estudios_driver">Cert. Estudios</string>
+    <string name="btn_solicitud_driver">Solicitud Empleo</string>
+    <string name="btn_INE_driver">INE</string>
+    <string name="btn_NSS_driver">NSS</string>
+    <string name="btn_CURP_driver">CURP</string>
+    <string name="btn_RFC_driver">RFC</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Dialogs -->
+    <string name="loading_dialog">Cargando</string>
+    <string name="error_dialog">Error </string>
+    <string name="title_activity_employess">Employess</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+
+</resources>
