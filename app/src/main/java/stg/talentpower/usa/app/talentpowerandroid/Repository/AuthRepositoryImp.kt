@@ -6,13 +6,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 import com.google.gson.Gson
 import stg.talentpower.usa.app.talentpowerandroid.Model.Employess
 import stg.talentpower.usa.app.talentpowerandroid.Util.FireStoreCollection
 import stg.talentpower.usa.app.talentpowerandroid.Util.SharedPrefConstants
 import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
+
 
 class AuthRepositoryImp(
     val auth: FirebaseAuth,
@@ -30,9 +31,9 @@ class AuthRepositoryImp(
                         when(state){
                             is UiState.Success -> {
                                 Log.d("test","state success in updateuser")
+                                /*
                                 storeSession(id = it.result.user?.uid ?: "") {
                                     if (it == null){
-
                                         result.invoke(UiState.Failure("User register successfully but session failed to store"))
                                     }else{
                                         result.invoke(
@@ -40,6 +41,10 @@ class AuthRepositoryImp(
                                         )
                                     }
                                 }
+
+
+                                 */
+                                result.invoke(UiState.Success("User register successfully!"))
                             }
                             is UiState.Failure -> {
                                 result.invoke(UiState.Failure(state.error))
@@ -97,12 +102,11 @@ class AuthRepositoryImp(
         auth.signInWithEmailAndPassword(email,password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d("taskLogin","logeado")
                     storeSession(id = task.result.user?.uid ?: ""){
                         if (it == null){
                             result.invoke(UiState.Failure("Failed to store local session"))
                         }else{
-                            Log.d("success","logeado")
+                            Log.d("storageLocation","User isnt null")
                             result.invoke(UiState.Success("Login successfully!"))
                         }
                     }
@@ -133,25 +137,63 @@ class AuthRepositoryImp(
     }
 
     override fun storeSession(id: String, result: (Employess?) -> Unit) {
-
         database.collection(FireStoreCollection.USERS).document(FireStoreCollection.EMPLOYESS)
             .get()
             .addOnCompleteListener {
                 if (it.isSuccessful){
-                    if (it.result.contains(id)){
-                        val user = it.result.toObject(Employess::class.java)
-                        appPreferences.edit().putString(SharedPrefConstants.USER_SESSION,gson.toJson(user)).apply()
-                        result.invoke(user)
+                    val document=it.result
+                    if (document.exists()){
+                        val queue=document.get(id) as Map<*,*>
+                        if (queue.containsValue(id)){
+                            val user=Employess(
+                                queue["id"].toString(),
+                                queue["email"].toString(),
+                                queue["password"].toString(),
+                                queue["name"].toString(),
+                                queue["phone"].toString(),
+                                queue["rol"].toString(),
+                            )
+                            Log.d("storageLocation",user.toString())
+                            appPreferences.edit().putString(SharedPrefConstants.USER_SESSION,gson.toJson(user)).apply()
+                            result.invoke(user)
+                        }
                     }
 
+                    /*
+                    if (document!=null){
+                        val obj=document.toObject(DocumentEmployes::class.java)
+                        if (obj!=null) {
+                            obj.employess?.forEach {
+                                Log.d("listaEmployess", it.toString())
+                            }
+                        }else Log.d("listaEmployess", "el la lista es null")
+                    }else Log.d("listaEmployess", "El document es null")
+
+                     */
+                    /*
+                    it.result.data?.forEach {map->
+
+                        try {
+                            val res= it.result.data?.
+                            Log.d("testStoresesion", res.toString())
+
+                            //result.invoke(res)
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                        }
+                    }
+
+
+                     */
                 }else{
                     result.invoke(null)
                 }
+
+
             }
             .addOnFailureListener {
                 result.invoke(null)
             }
-
     }
 
     override fun getSession(result: (Employess?) -> Unit) {

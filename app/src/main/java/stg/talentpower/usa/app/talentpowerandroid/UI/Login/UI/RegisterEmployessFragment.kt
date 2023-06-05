@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import stg.talentpower.usa.app.talentpowerandroid.Model.Employess
-import stg.talentpower.usa.app.talentpowerandroid.Model.ModelEmployess
 import stg.talentpower.usa.app.talentpowerandroid.UI.Login.ViewModel.AuthViewModel
 import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
 import stg.talentpower.usa.app.talentpowerandroid.Util.hide
@@ -41,9 +40,6 @@ class RegisterEmployessFragment : Fragment() {
             subobj.Rol="Employess"
             subobj.Password=binding.tfPassword.text.toString()
             subobj.Phone=binding.tfPassword.text.toString()
-
-            val obj=ModelEmployess()
-            obj.employee=subobj
 
             model.register(
                 binding.tfEmail.text.toString(),

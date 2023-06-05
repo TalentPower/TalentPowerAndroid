@@ -6,12 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import stg.talentpower.usa.app.talentpowerandroid.R
 import stg.talentpower.usa.app.talentpowerandroid.UI.Login.ViewModel.AuthViewModel
 import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
+import stg.talentpower.usa.app.talentpowerandroid.Util.hide
 import stg.talentpower.usa.app.talentpowerandroid.Util.isValidEmail
+import stg.talentpower.usa.app.talentpowerandroid.Util.show
 import stg.talentpower.usa.app.talentpowerandroid.Util.toast
 import stg.talentpower.usa.app.talentpowerandroid.databinding.FragmentLoginBinding
 
@@ -49,8 +54,9 @@ class LoginFragment : Fragment() {
         model.login.observe(requireActivity()){state->
             when(state){
                 is UiState.Loading -> {
-                    binding.tfEmailLogin.text.clear()
-                    //binding.loginProgress.show()
+                    //binding.tfEmailLogin.text.clear()
+                    binding.loginProgress.show()
+                    binding.loginBtn.text = ""
                 }
                 is UiState.Failure -> {
                     //binding.loginBtn.setText("Login")
@@ -60,6 +66,10 @@ class LoginFragment : Fragment() {
                 is UiState.Success -> {
                     //binding.loginBtn.setText("Login")
                     //binding.loginProgress.hide()
+                    binding.tfEmailLogin.text.clear()
+                    binding.tfPasswordLogin.text.clear()
+                    binding.loginProgress.hide()
+                    binding.loginBtn.text = "Login"
                     toast(state.data)
                     //findNavController().navigate(R.id.action_loginFragment_to_home_navigation)
                 }
@@ -100,6 +110,21 @@ class LoginFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onStart() {
+        super.onStart()
+        model.getSession {user->
+            lifecycleScope.launch {
+                if (user!=null){
+                    delay(2000)
+                    toast("Usuario encontrado ${user.Name}")
+                }
+
+            }
+
+
+        }
     }
 
 

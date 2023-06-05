@@ -9,8 +9,5 @@ data class Employess(
     var Rol: String ="Employes"
 )
 
-data class ModelEmployess(
-    var id: String = "",
-    var employee:Employess?=null
-)
+
 
