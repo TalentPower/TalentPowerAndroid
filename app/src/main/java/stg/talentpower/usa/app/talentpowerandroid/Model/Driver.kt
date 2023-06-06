@@ -12,5 +12,5 @@ data class Driver(
     var Password:String="",
     var Rol:String="Driver",
     var Route:String="",
-    val images: List<String> = arrayListOf()
+    val images: MutableList<ImagesModel> = arrayListOf()
 )

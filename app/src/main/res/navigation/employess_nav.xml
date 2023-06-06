@@ -9,17 +9,36 @@
         android:id="@+id/navigation_home"
         android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_home_employess" >
+        <action
+            android:id="@+id/action_navigation_home_to_addDriverFragment"
+            app:destination="@id/addDriverFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_createRouteFragment"
+            app:destination="@id/createRouteFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_notifications_employess" />
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.setings.SetingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_setings_employess" />
+    <fragment
+        android:id="@+id/addDriverFragment"
+        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.AddDriverFragment"
+        android:label="fragment_add_driver"
+        tools:layout="@layout/fragment_add_driver" />
+    <fragment
+        android:id="@+id/createRouteFragment"
+        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.CreateRouteFragment"
+        android:label="fragment_create_route"
+        tools:layout="@layout/fragment_create_route" />
+
+
 </navigation>

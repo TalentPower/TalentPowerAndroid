@@ -15,7 +15,6 @@ class AuthActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAuthBinding
     private lateinit var navController:NavController
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityAuthBinding.inflate(layoutInflater)
@@ -23,11 +22,6 @@ class AuthActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_hots_auth) as NavHostFragment
         navController = navHostFragment.navController
-
-
-
-
-
 
     }
 }

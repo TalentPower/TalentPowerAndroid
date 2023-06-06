@@ -3,13 +3,13 @@ package stg.talentpower.usa.app.talentpowerandroid.di
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import stg.talentpower.usa.app.talentpowerandroid.Util.FirebaseStorageConstants
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -37,7 +37,7 @@ object FirebaseModule {
     @Provides
     @Singleton
     fun provideFirebaseStroageInstance(): StorageReference {
-        return FirebaseStorage.getInstance().getReference(FirebaseStorageConstants.ROOT_DIRECTORY)
+        return Firebase.storage.reference
     }
 
 }

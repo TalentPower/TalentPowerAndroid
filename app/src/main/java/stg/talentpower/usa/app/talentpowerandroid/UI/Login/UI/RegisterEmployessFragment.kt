@@ -1,5 +1,6 @@
 package stg.talentpower.usa.app.talentpowerandroid.UI.Login.UI
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import stg.talentpower.usa.app.talentpowerandroid.Model.Employess
+import stg.talentpower.usa.app.talentpowerandroid.UI.Employess.EmployessActivity
 import stg.talentpower.usa.app.talentpowerandroid.UI.Login.ViewModel.AuthViewModel
 import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
 import stg.talentpower.usa.app.talentpowerandroid.Util.hide
@@ -62,6 +64,7 @@ class RegisterEmployessFragment : Fragment() {
                     binding.tfPassword.text.clear()
                     toast(state.data)
                     //findNavController().navigate(R.id.action_registerFragment_to_home_navigation)
+
                 }
                 is UiState.Loading->{
                     binding.registerBtn.setText("")

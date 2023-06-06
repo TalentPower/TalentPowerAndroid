@@ -23,6 +23,8 @@ class AuthRepositoryImp(
 ): AuthRepository {
 
 
+
+
     override fun registerUser(email: String, password: String, user: Employess, result: (UiState<String>) -> Unit) {
         auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener {
                 if (it.isSuccessful){
@@ -107,7 +109,7 @@ class AuthRepositoryImp(
                             result.invoke(UiState.Failure("Failed to store local session"))
                         }else{
                             Log.d("storageLocation","User isnt null")
-                            result.invoke(UiState.Success("Login successfully!"))
+                            result.invoke(UiState.Success(task.result.user?.uid.toString()))
                         }
                     }
                 }
@@ -151,9 +153,7 @@ class AuthRepositoryImp(
                                 queue["password"].toString(),
                                 queue["name"].toString(),
                                 queue["phone"].toString(),
-                                queue["rol"].toString(),
-                            )
-                            Log.d("storageLocation",user.toString())
+                                queue["rol"].toString(),)
                             appPreferences.edit().putString(SharedPrefConstants.USER_SESSION,gson.toJson(user)).apply()
                             result.invoke(user)
                         }
@@ -197,15 +197,16 @@ class AuthRepositoryImp(
     }
 
     override fun getSession(result: (Employess?) -> Unit) {
-
+        Log.d("storeSession","Entre a store sesion")
         val user_str = appPreferences.getString(SharedPrefConstants.USER_SESSION,null)
         if (user_str == null){
+            Log.d("storeSession","User str null")
             result.invoke(null)
         }else{
+            Log.d("storeSession","User_str not null")
+
             val user = gson.fromJson(user_str,Employess::class.java)
             result.invoke(user)
         }
-
-
     }
 }

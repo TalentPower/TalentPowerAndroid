@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".UI.Employess.home.AddDriverFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayoutCompat2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/tfName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                android:hint="@string/tf_name_driver"
+                android:layout_marginTop="30dp"
+                tools:layout_editor_absoluteX="134dp"
+                tools:layout_editor_absoluteY="86dp" />
+
+            <EditText
+                android:id="@+id/tfAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                android:layout_marginTop="10dp"
+                android:hint="@string/tf_address_driver"
+                tools:layout_editor_absoluteX="138dp"
+                tools:layout_editor_absoluteY="150dp" />
+
+            <EditText
+                android:id="@+id/tfPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:hint="@string/tf_phone_driver"
+                android:layout_marginTop="10dp"
+                tools:layout_editor_absoluteX="138dp"
+                tools:layout_editor_absoluteY="150dp" />
+
+            <EditText
+                android:id="@+id/tfPhoneEmergency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:layout_marginTop="10dp"
+                android:inputType="number"
+                android:hint="@string/tf_emergency_phone_driver"
+                tools:layout_editor_absoluteX="138dp"
+                tools:layout_editor_absoluteY="150dp" />
+
+            <EditText
+                android:id="@+id/tfNSS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:layout_marginTop="10dp"
+                android:hint="@string/tf_NSS_driver"
+                tools:layout_editor_absoluteX="138dp"
+                tools:layout_editor_absoluteY="150dp" />
+
+            <EditText
+                android:id="@+id/tfBankKey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:hint="@string/tf_bank_driver"
+                android:layout_marginTop="10dp"
+                tools:layout_editor_absoluteX="138dp"
+                tools:layout_editor_absoluteY="150dp" />
+
+            <EditText
+                android:id="@+id/tfEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                android:hint="@string/tf_email_driver"
+                android:layout_marginTop="10dp"
+                tools:layout_editor_absoluteX="138dp"
+                tools:layout_editor_absoluteY="224dp" />
+
+            <EditText
+                android:id="@+id/tfPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:layout_marginTop="10dp"
+                android:hint="@string/tf_password_driver"
+                android:inputType="textPassword"
+                tools:layout_editor_absoluteX="138dp"
+                tools:layout_editor_absoluteY="298dp" />
+
+            <ImageButton
+                android:id="@+id/btnAddPhoto"
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:layout_editor_absoluteX="129dp"
+                tools:layout_editor_absoluteY="363dp"
+                tools:src="@drawable/ic_acount_24" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/btnSaveDriver"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <Button
+                    android:id="@+id/btnCURP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_CURP_driver" />
+
+                <Button
+                    android:id="@+id/btnRFC"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_RFC_driver"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginEnd="25dp"
+                    tools:layout_editor_absoluteX="176dp"
+                    tools:layout_editor_absoluteY="537dp" />
+
+                <Button
+                    android:id="@+id/btnINE"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_INE_driver" />
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/linearLayoutCompat"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/btnSaveDriver"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <Button
+                    android:id="@+id/btnLicencia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_licencia_driver"/>
+
+                <Button
+                    android:id="@+id/btnCertEstudios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/btn_cert_estudios_driver" />
+
+                <Button
+                    android:id="@+id/btnNSS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_NSS_driver" />
+
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/btnSaveDriver"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <Button
+                    android:id="@+id/btnSolicitud"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_solicitud_driver"
+                    android:layout_marginEnd="10dp"/>
+
+                <Button
+                    android:id="@+id/btnActa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/btn_acta_driver" />
+
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+            <Button
+                android:id="@+id/btnSaveDriver"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_guardar"
+                android:layout_marginBottom="50dp"/>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

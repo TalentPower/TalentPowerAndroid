@@ -17,6 +17,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 fun View.hide(){
@@ -83,6 +86,14 @@ val Int.dpToPx: Int
 
 val Int.pxToDp: Int
     get() = (this / Resources.getSystem().displayMetrics.density).toInt()
+
+object Date{
+    fun currentData():String{
+        val formatter = SimpleDateFormat("yyyy_MM_dd_HH:mm:ss", Locale.getDefault())
+        val now = Date()
+        return formatter.format(now)
+    }
+}
 
 fun String.isValidEmail() =
     isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()

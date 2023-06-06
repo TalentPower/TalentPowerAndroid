@@ -12,6 +12,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import stg.talentpower.usa.app.talentpowerandroid.Repository.AuthRepository
 import stg.talentpower.usa.app.talentpowerandroid.Repository.AuthRepositoryImp
+import stg.talentpower.usa.app.talentpowerandroid.Repository.ClientRepository
+import stg.talentpower.usa.app.talentpowerandroid.Repository.ClientRepositoryImp
+import stg.talentpower.usa.app.talentpowerandroid.Repository.DriverRepository
+import stg.talentpower.usa.app.talentpowerandroid.Repository.DriverRepositoryImp
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -44,6 +48,25 @@ object RepositoryModule {
         gson: Gson
     ): AuthRepository {
         return AuthRepositoryImp(auth,database,appPreferences,gson)
+    }
+
+    @Provides
+    @Singleton
+    fun provideClienthRepository(
+        database: FirebaseFirestore,
+        auth: FirebaseAuth
+    ): ClientRepository{
+        return ClientRepositoryImp(auth,database)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDriverhRepository(
+        database: FirebaseFirestore,
+        auth: FirebaseAuth,
+        storageReference: StorageReference
+    ) : DriverRepository{
+        return DriverRepositoryImp(auth,database,storageReference)
     }
 
 

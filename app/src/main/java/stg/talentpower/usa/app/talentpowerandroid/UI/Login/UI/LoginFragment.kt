@@ -1,6 +1,8 @@
 package stg.talentpower.usa.app.talentpowerandroid.UI.Login.UI
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import stg.talentpower.usa.app.talentpowerandroid.R
+import stg.talentpower.usa.app.talentpowerandroid.UI.Employess.EmployessActivity
 import stg.talentpower.usa.app.talentpowerandroid.UI.Login.ViewModel.AuthViewModel
 import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
 import stg.talentpower.usa.app.talentpowerandroid.Util.hide
@@ -23,16 +26,11 @@ import stg.talentpower.usa.app.talentpowerandroid.databinding.FragmentLoginBindi
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
 
-    //private val model :LoginViewModel by viewModels()
     private val model:AuthViewModel by viewModels()
-
-
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -40,7 +38,6 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         binding.loginBtn.setOnClickListener {
             if (validation()){
@@ -71,6 +68,8 @@ class LoginFragment : Fragment() {
                     binding.loginProgress.hide()
                     binding.loginBtn.text = "Login"
                     toast(state.data)
+                    val i= Intent(requireContext(), EmployessActivity::class.java)
+                    requireActivity().startActivity(i)
                     //findNavController().navigate(R.id.action_loginFragment_to_home_navigation)
                 }
             }
@@ -115,15 +114,31 @@ class LoginFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         model.getSession {user->
-            lifecycleScope.launch {
-                if (user!=null){
+            if (user!=null){
+                lifecycleScope.launch {
                     delay(2000)
                     toast("Usuario encontrado ${user.Name}")
+
+
+                    when(user.Rol){
+                        "Driver"->{
+
+                            Log.d("rol","Soy driver")
+
+                        }
+                        "Employess"->{
+                            requireActivity().finish()
+                            val i=Intent(requireContext(),EmployessActivity::class.java)
+                            requireActivity().startActivity(i)
+
+                        }
+                        "Client"->{
+                            Log.d("rol","Soy client")
+
+                        }
+                    }
                 }
-
             }
-
-
         }
     }
 
