@@ -12,14 +12,16 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import stg.talentpower.usa.app.talentpowerandroid.Model.Driver
+import stg.talentpower.usa.app.talentpowerandroid.Model.Driver2
+import stg.talentpower.usa.app.talentpowerandroid.Model.Employee
 import stg.talentpower.usa.app.talentpowerandroid.Model.ImagesModel
+import stg.talentpower.usa.app.talentpowerandroid.Util.Cities
+import stg.talentpower.usa.app.talentpowerandroid.Util.Country
 import stg.talentpower.usa.app.talentpowerandroid.Util.Date
 import stg.talentpower.usa.app.talentpowerandroid.Util.FireStoreCollection
-import stg.talentpower.usa.app.talentpowerandroid.Util.FirebaseStorageConstants
 import stg.talentpower.usa.app.talentpowerandroid.Util.FirebaseStorageConstants.NOTE_IMAGES
 import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
 
@@ -28,29 +30,20 @@ class DriverRepositoryImp (
     val database: FirebaseFirestore,
     val storageReference: StorageReference) :DriverRepository{
 
-    override fun registerDriver(
-        email: String,
-        password: String,
-        driver: Driver,
-        result: (UiState<String>) -> Unit){
-
-        result.invoke(UiState.Loading)
+    override fun registerDriver(email: String, password: String, driver: Driver, result: (UiState<String>) -> Unit){
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
             if (it.isSuccessful){
                 driver.id=it.result.user?.uid ?: ""
                 updateDriverInfo(driver){state ->
                     when(state){
                         is UiState.Success->{
-                            result.invoke(UiState.Success("Client register successfully!"))
+                            result.invoke(UiState.Success("Driver register successfully!"))
                         }
                         is UiState.Failure->{
                             result.invoke(UiState.Failure(state.error))
                         }
-                        is UiState.Loading->{
-
-                        }
+                        is UiState.Loading-> TODO()
                     }
-
                 }
             }else{
                 try {
@@ -74,79 +67,63 @@ class DriverRepositoryImp (
         }
     }
 
-    override fun updateDriverInfo(driver: Driver, result: (UiState<String>) -> Unit) {
-        val document = database.collection(FireStoreCollection.DRIVERS).document(driver.id)
+    override fun updateDriverInfo(driver: Driver2) {
+        database.collection(FireStoreCollection.DRIVERS)
+            .document(Country.MEXICO)
+            .collection(Cities.QUERETARO)
+            .document(driver.id)
+            .update("route",driver.route)
+            .addOnCompleteListener {
+                Log.d("driverUpdated","oncomplete del uodateDriver")
+            }.addOnFailureListener {
+
+            }
+    }
+
+    fun updateDriverInfo(driver: Driver, result: (UiState<String>) -> Unit) {
+        val document = database.collection("users").document(Country.MEXICO).collection(Cities.QUERETARO).document(driver.id)
         document.set(driver)
             .addOnSuccessListener {
                 uploadMultipleFile(driver.id,driver.images){ state->
                     when(state){
-                        is UiState.Loading->{
-
-                        }
+                        is UiState.Loading-> TODO()
                         is UiState.Failure->{
-
                             result.invoke(UiState.Failure(state.error))
                         }
                         is UiState.Success->{
-
                             result.invoke(UiState.Success("Success"))
-
-
                         }
-
                     }
-
                 }
-
-
-                result.invoke(
-                    UiState.Success("User has been update successfully")
-                )
-            }
-            .addOnFailureListener {
-                result.invoke(
-                    UiState.Failure(
-                        it.localizedMessage
-                    )
-                )
+                result.invoke(UiState.Success("User has been update successfully"))
+            }.addOnFailureListener {
+                result.invoke(UiState.Failure(it.localizedMessage))
             }
     }
 
     fun uploadMultipleFile(id:String,fileUri: List<ImagesModel>, result: (UiState<String>) -> Unit){
-
         try {
             val listURL= ArrayList<ImagesModel>()
             fileUri.forEach { image->
-                storageReference.child("ImagesDriver/$id/${image.Name}_${Date.currentData()}")
-                    .putFile(image.Image!!).addOnSuccessListener {
+                storageReference.child("ImagesDriver/$id/${image.name}_${Date.currentData()}")
+                    .putFile(image.image!!).addOnSuccessListener {
                         it.storage.downloadUrl.addOnSuccessListener {
-                            val obj= ImagesModel(it,image.Name)
+                            val obj= ImagesModel(it,image.name)
                             listURL.add(obj)
                         }
                     }
             }
-
-            val hashMap : HashMap<String, String> = HashMap()
-            listURL.forEach { obj->
-                hashMap["images.${obj.Name}"] = "${obj.Image}"
-            }
-            database.collection(FireStoreCollection.DRIVERS).document(id).update(hashMap as Map<String, String>).addOnCompleteListener {
+            database.collection(FireStoreCollection.DRIVERS).document(id).update("images",listURL).addOnCompleteListener {
                 result.invoke(UiState.Success("Agregado con exito"))
             }.addOnFailureListener { error->
                 result.invoke(UiState.Failure(error.localizedMessage))
             }
         }catch (e: Exception){
             result.invoke(UiState.Failure(e.localizedMessage))
-
         }
-
-
-
     }
 
-
     override suspend fun uploadMultipleFile(fileUri: List<Uri>, onResult: (UiState<List<Uri>>) -> Unit) {
-
         try {
             val uri: List<Uri> = withContext(Dispatchers.IO) {
                 fileUri.map { image ->
@@ -157,6 +134,7 @@ class DriverRepositoryImp (
                             .storage
                             .downloadUrl
                             .await()
+
                     }
                 }.awaitAll()
             }
@@ -168,4 +146,36 @@ class DriverRepositoryImp (
         }
     }
 
+    override suspend fun getDrivers(onResult: (UiState<List<Driver2>>) -> Unit) {
+        /*
+        database.collection(FireStoreCollection.DRIVERS)
+            .document(Country.MEXICO)
+            .collection(Cities.QUERETARO)
+            .get()
+            .addOnCompleteListener {task->
+                if (task.isSuccessful){
+                    val doc=task.result
+                    val types: List<Driver2> = doc.toObjects(Driver2::class.java)
+                    onResult.invoke(UiState.Success(types))
+                }
+            }.addOnFailureListener {
+                onResult.invoke(UiState.Failure(it.localizedMessage))
+            }
+
+
+         */
+        try {
+            val drivers=database.collection("users")
+                .document(Country.MEXICO)
+                .collection(Cities.QUERETARO)
+                .whereEqualTo("rol","driver")
+                .get()
+                .await()
+                .toObjects(Driver2::class.java)
+            Log.d("driversFragment","La lista $drivers")
+            onResult.invoke(UiState.Success(drivers))
+        }catch (e:Exception){
+            onResult.invoke(UiState.Failure(e.localizedMessage))
+        }
+    }
 }

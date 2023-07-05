@@ -25,5 +25,6 @@
     <fragment
         android:id="@+id/registerEmployessFragment"
         android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Login.UI.RegisterEmployessFragment"
-        android:label="RegisterEmployessFragment" />
+        android:label="RegisterEmployessFragment"
+        tools:layout="@layout/fragment_register_employess"/>
 </navigation>

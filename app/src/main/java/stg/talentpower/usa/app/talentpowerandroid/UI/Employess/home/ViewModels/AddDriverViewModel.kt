@@ -1,4 +1,4 @@
-package stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home
+package stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.ViewModels
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import stg.talentpower.usa.app.talentpowerandroid.Model.Driver
 import stg.talentpower.usa.app.talentpowerandroid.Repository.DriverRepository
@@ -24,13 +25,16 @@ class AddDriverViewModel @Inject constructor(
 
     fun registerDriver(email: String, password: String, driver: Driver){
         _register.value = UiState.Loading
-        repository.registerDriver(
-            email = email,
-            password = password,
-            driver = driver
-        ) {
-            _register.value = it
+        viewModelScope.launch(Dispatchers.IO){
+            repository.registerDriver(
+                email = email,
+                password = password,
+                driver = driver
+            ) {
+                _register.postValue(it)
+            }
         }
+
     }
 
     fun onUploadMultipleFile(fileUris: List<Uri>, onResult: (UiState<List<Uri>>) -> Unit){

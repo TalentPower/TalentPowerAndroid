@@ -13,7 +13,11 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import stg.talentpower.usa.app.talentpowerandroid.Model.Client
+import stg.talentpower.usa.app.talentpowerandroid.Model.Driver2
+import stg.talentpower.usa.app.talentpowerandroid.Model.Employee
 import stg.talentpower.usa.app.talentpowerandroid.R
+import stg.talentpower.usa.app.talentpowerandroid.UI.Driver.DriverActivity
 import stg.talentpower.usa.app.talentpowerandroid.UI.Employess.EmployessActivity
 import stg.talentpower.usa.app.talentpowerandroid.UI.Login.ViewModel.AuthViewModel
 import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
@@ -35,15 +39,13 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.loginBtn.setOnClickListener {
+        binding.loginBtn.setOnClickListener{
             if (validation()){
                 model.login(
                     email = binding.tfEmailLogin.text.toString(),
-                    password = binding.tfPasswordLogin.text.toString()
+                    password = binding.tfPasswordLogin.text.toString(),
                 )
             }
         }
@@ -51,31 +53,36 @@ class LoginFragment : Fragment() {
         model.login.observe(requireActivity()){state->
             when(state){
                 is UiState.Loading -> {
-                    //binding.tfEmailLogin.text.clear()
                     binding.loginProgress.show()
                     binding.loginBtn.text = ""
                 }
                 is UiState.Failure -> {
-                    //binding.loginBtn.setText("Login")
-                    //binding.loginProgress.hide()
                     toast(state.error)
+                    clear()
                 }
                 is UiState.Success -> {
-                    //binding.loginBtn.setText("Login")
-                    //binding.loginProgress.hide()
-                    binding.tfEmailLogin.text.clear()
-                    binding.tfPasswordLogin.text.clear()
-                    binding.loginProgress.hide()
-                    binding.loginBtn.text = "Login"
-                    toast(state.data)
-                    val i= Intent(requireContext(), EmployessActivity::class.java)
-                    requireActivity().startActivity(i)
-                    //findNavController().navigate(R.id.action_loginFragment_to_home_navigation)
+                    when(state.data){
+                        is Employee->{
+                            clear()
+                            val i= Intent(requireContext(), EmployessActivity::class.java)
+                            activity?.startActivity(i)
+                            activity?.finish()
+                        }
+                        is Driver2 ->{
+                            clear()
+                            val i= Intent(requireContext(), DriverActivity::class.java)
+                            activity?.startActivity(i)
+                            activity?.finish()
+                        }
+                        is Client->{
+                            clear()
+                            toast("Client not available now")
+                        }
+                    }
                 }
+                else -> {}
             }
         }
-
-
 
         binding.registerLabel.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment2_to_registerEmployessFragment)
@@ -115,32 +122,27 @@ class LoginFragment : Fragment() {
         super.onStart()
         model.getSession {user->
             if (user!=null){
-                lifecycleScope.launch {
-                    delay(2000)
-                    toast("Usuario encontrado ${user.Name}")
-
-
-                    when(user.Rol){
-                        "Driver"->{
-
-                            Log.d("rol","Soy driver")
-
-                        }
-                        "Employess"->{
-                            requireActivity().finish()
-                            val i=Intent(requireContext(),EmployessActivity::class.java)
-                            requireActivity().startActivity(i)
-
-                        }
-                        "Client"->{
-                            Log.d("rol","Soy client")
-
-                        }
+                when(user){
+                    is Driver2->{
+                        Log.d("rol","Soy driver")
+                    }
+                    is Employee->{
+                        requireActivity().finish()
+                        val i=Intent(requireContext(),EmployessActivity::class.java)
+                        activity?.startActivity(i)
+                        activity?.finish()
+                    }
+                    is Client->{
+                        Log.d("rol","Soy client")
                     }
                 }
             }
         }
     }
-
-
+    private fun clear(){
+        binding.tfEmailLogin.text.clear()
+        binding.tfPasswordLogin.text.clear()
+        binding.loginProgress.hide()
+        binding.loginBtn.text = "Login"
+    }
 }

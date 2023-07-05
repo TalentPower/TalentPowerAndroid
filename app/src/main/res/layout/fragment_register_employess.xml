@@ -88,7 +88,7 @@
         android:background="@drawable/black_white_rect_bg"
         android:ems="10"
         android:fontFamily="@font/titillium_web_regular"
-        android:inputType="textPersonName"
+        android:inputType="number"
         android:textColor="@color/black"
         android:textSize="14dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -103,14 +103,14 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/titillium_web_regular"
-        android:text="Rol"
+        android:text="Area"
         android:textColor="@color/black"
         android:textSize="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tfPhone" />
 
-    <EditText
-        android:id="@+id/tfRol"
+    <Spinner
+        android:id="@+id/spArea"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -118,10 +118,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:background="@drawable/black_white_rect_bg"
         android:ems="10"
         android:fontFamily="@font/titillium_web_regular"
-        android:inputType="textPersonName"
         android:textColor="@color/black"
         android:textSize="14dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -140,7 +138,7 @@
         android:textColor="@color/black"
         android:textSize="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tfRol" />
+        app:layout_constraintTop_toBottomOf="@+id/spArea" />
 
     <EditText
         android:id="@+id/tfEmail"

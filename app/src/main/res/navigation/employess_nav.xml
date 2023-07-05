@@ -13,9 +13,20 @@
         <action
             android:id="@+id/action_navigation_home_to_addDriverFragment"
             app:destination="@id/addDriverFragment" />
+
         <action
-            android:id="@+id/action_navigation_home_to_createRouteFragment"
-            app:destination="@id/createRouteFragment" />
+            android:id="@+id/action_navigation_home_to_routeDetailsFragment"
+            app:destination="@id/routeDetailsFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/slide_out"
+            app:popEnterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"/>
+        <action
+            android:id="@+id/action_navigation_home_to_addRouteFragment"
+            app:destination="@id/addRouteFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_addClientFragment"
+            app:destination="@id/addClientFragment" />
     </fragment>
 
     <fragment
@@ -35,10 +46,56 @@
         android:label="fragment_add_driver"
         tools:layout="@layout/fragment_add_driver" />
     <fragment
-        android:id="@+id/createRouteFragment"
-        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.CreateRouteFragment"
+        android:id="@+id/editRouteFragment"
+        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.EditRouteFragment"
         android:label="fragment_create_route"
-        tools:layout="@layout/fragment_create_route" />
+        tools:layout="@layout/fragment_edit_route" >
+        <action
+            android:id="@+id/action_editRouteFragment_to_addStopFragment"
+            app:destination="@id/addStopFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/slide_out"
+            app:popEnterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"/>
+    </fragment>
+    <fragment
+        android:id="@+id/addStopFragment"
+        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.AddStopFragment"
+        android:label="fragment_add_stop"
+        tools:layout="@layout/fragment_add_stop" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/routeDetailsFragment"
+        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.RouteDetailsFragment"
+        android:label="fragment_route_details"
+        tools:layout="@layout/fragment_route_details" >
+        <action
+            android:id="@+id/action_routeDetailsFragment_to_editRouteFragment"
+            app:destination="@id/editRouteFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/slide_out"
+            app:popEnterAnim="@anim/slide_in"/>
+    </fragment>
+    <fragment
+        android:id="@+id/addRouteFragment"
+        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.AddRouteFragment"
+        android:label="fragment_add_route"
+        tools:layout="@layout/fragment_add_route" >
+        <action
+            android:id="@+id/action_addRouteFragment_to_startEndStopsFragment"
+            app:destination="@id/startEndStopsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addClientFragment"
+        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.AddClientFragment"
+        android:label="fragment_add_client"
+        tools:layout="@layout/fragment_add_client" />
+    <fragment
+        android:id="@+id/startEndStopsFragment"
+        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.StartEndStopsFragment"
+        android:label="StartEndStopsFragment"
+        tools:layout="@layout/start_end_stops_fragment"/>
 
 
 </navigation>

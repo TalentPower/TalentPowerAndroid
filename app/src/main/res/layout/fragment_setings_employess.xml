@@ -1,22 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     tools:context=".UI.Employess.setings.SetingsFragment">
 
-    <TextView
-        android:id="@+id/text_dashboard"
+
+    <androidx.cardview.widget.CardView
+        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_margin="10dp"
+        card_view:cardUseCompatPadding="true"
+        card_view:cardElevation="4dp"
+        card_view:cardCornerRadius="3dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imgProfileEmployes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_acount_24"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"/>
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imgProfileEmployes"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="30dp"
+                android:textSize="17sp"
+                android:text="Nombre:" />
+
+            <TextView
+                android:id="@+id/txtNameProfileEmployes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/textView14"
+                android:layout_below="@id/imgProfileEmployes"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView14"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="30dp"
+                android:textSize="17sp"
+                android:text="Telefono:" />
+
+            <TextView
+                android:id="@+id/txtPhoneProfileEmployes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView14"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/black"
+                android:layout_toEndOf="@+id/textView16"
+                android:textSize="17sp"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView16"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:textSize="17sp"
+                android:text="Area:" />
+
+            <TextView
+                android:id="@+id/txtAreaProfileEmployes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView16"
+                android:layout_toEndOf="@+id/textView17"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="10dp"
+                android:textSize="17sp"
+                android:textColor="@color/black"
+                android:text="TextView" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/btnLogOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:text="Cerrar Sesion" />
+
+</RelativeLayout>

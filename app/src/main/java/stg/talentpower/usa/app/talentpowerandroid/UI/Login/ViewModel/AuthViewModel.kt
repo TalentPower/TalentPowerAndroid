@@ -3,8 +3,12 @@ package stg.talentpower.usa.app.talentpowerandroid.UI.Login.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import stg.talentpower.usa.app.talentpowerandroid.Model.Employess
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import stg.talentpower.usa.app.talentpowerandroid.Model.Employee
 import stg.talentpower.usa.app.talentpowerandroid.Repository.AuthRepository
 import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
 import javax.inject.Inject
@@ -17,29 +21,33 @@ class AuthViewModel @Inject constructor(
     private val _register = MutableLiveData<UiState<String>>()
     val register: LiveData<UiState<String>> get() = _register
 
-    private val _login = MutableLiveData<UiState<String>>()
-    val login: LiveData<UiState<String>>
-        get() = _login
+    private val _login = MutableLiveData<UiState<Any>>()
+    val login: LiveData<UiState<Any>> get() = _login
 
     private val _forgotPassword = MutableLiveData<UiState<String>>()
-    val forgotPassword: LiveData<UiState<String>>
-        get() = _forgotPassword
+    val forgotPassword: LiveData<UiState<String>> get() = _forgotPassword
 
 
-    fun register(email: String, password: String, user: Employess) {
-        _register.value = UiState.Loading
-        repository.registerUser(
-            email = email,
-            password = password,
-            user = user
-        ) { _register.value = it }
+    fun register(email: String, password: String, user: Employee) {
+        _register.value=UiState.Loading
+        viewModelScope.launch (Dispatchers.IO){
+            repository.registerUser(
+                email = email,
+                password = password,
+                user = user
+            ) { _register.postValue(it) }
+        }
+
     }
 
     fun login(email: String, password: String) {
         _login.value = UiState.Loading
-        repository.loginUser(email, password){
-            _login.value = it
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.loginUser(email, password){
+                _login.postValue(it)
+            }
         }
+
     }
 
     fun forgotPassword(email: String) {
@@ -53,8 +61,11 @@ class AuthViewModel @Inject constructor(
         repository.logout(result)
     }
 
-    fun getSession(result: (Employess?) -> Unit){
-        repository.getSession(result)
+    fun getSession(result: (Any?) -> Unit){
+        viewModelScope.launch(Dispatchers.IO){
+            repository.getSession(result)
+        }
+
     }
 
 }

@@ -33,6 +33,7 @@
     <string name="btn_agregar_chofer">Agregar Chofer</string>
     <string name="btn_agregar_ruta">Agregar Ruta</string>
     <string name="btn_agregar_cliente">Agregar Cliente</string>
+    <string name="btn_agregar_trabajador">Agregar Trabajador</string>
 
     <!-- Fragment Add Driver -->
     <string name="tf_name_driver">Nombre</string>
@@ -52,6 +53,7 @@
     <string name="btn_NSS_driver">NSS</string>
     <string name="btn_CURP_driver">CURP</string>
     <string name="btn_RFC_driver">RFC</string>
+    <string name="btn_ver_paradas">Ver puntos de encuentro</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -63,6 +65,8 @@
     <string name="title_home">Home</string>
     <string name="title_settings">Setings</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_activity_driver">DriverActivity</string>
+    <string name="title_dashboard">Dashboard</string>
 
 
 </resources>

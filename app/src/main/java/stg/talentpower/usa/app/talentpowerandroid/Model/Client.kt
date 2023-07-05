@@ -1,12 +1,15 @@
 package stg.talentpower.usa.app.talentpowerandroid.Model
 
+import com.google.firebase.firestore.GeoPoint
+
 data class Client(
-    var id:String="",
-    var Name:String="",
-    var Ubicacion:String="",
-    var Phone:String="",
-    var Image:String="",
-    var Email:String="",
-    var Password:String="",
-    var Rol:String="Client"
-)
+    var name:String="",
+    var address:String="",
+    var latlng: GeoPoint?=null,
+    var facturation:Int=0,
+    var areas:MutableList<String>?= mutableListOf()
+){
+    override fun toString(): String {
+        return name
+    }
+}

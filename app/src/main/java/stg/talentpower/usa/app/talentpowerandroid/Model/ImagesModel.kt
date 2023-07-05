@@ -3,10 +3,13 @@ package stg.talentpower.usa.app.talentpowerandroid.Model
 import android.net.Uri
 
 data class ImagesModel(
-    var Image: Uri? =null,
-    var Name:String?=""
+    var image: Uri? =null,
+    var name:String?=""
 )
 
-data class MapImages(
-    var ListImages:List<ImagesModel>
+data class ImagesModel2(
+    var image: String? ="",
+    var name:String?=""
 )
+
+

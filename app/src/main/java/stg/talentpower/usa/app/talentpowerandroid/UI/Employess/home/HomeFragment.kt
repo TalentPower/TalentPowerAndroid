@@ -1,22 +1,47 @@
 package stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home
 
 import android.app.Dialog
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.TextView
+import android.widget.RemoteViews
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+import org.json.JSONException
+import org.json.JSONObject
 import stg.talentpower.usa.app.talentpowerandroid.Model.Client
+import stg.talentpower.usa.app.talentpowerandroid.Model.Driver2
 import stg.talentpower.usa.app.talentpowerandroid.R
+import stg.talentpower.usa.app.talentpowerandroid.UI.Employess.EmployessActivity
+import stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.Adapters.AdapterRoutes
+import stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.ViewModels.HomeViewModel
 import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
 import stg.talentpower.usa.app.talentpowerandroid.Util.createDialog
 import stg.talentpower.usa.app.talentpowerandroid.Util.hide
@@ -29,9 +54,8 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeEmployessBinding? = null
     private val binding get() = _binding!!
-    private lateinit var dialog: Dialog
 
-    private val model:HomeViewModel by viewModels()
+    private val model: HomeViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeEmployessBinding.inflate(inflater, container, false)
@@ -41,78 +65,60 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        observers()
+
+        //FirebaseMessaging.getInstance().subscribeToTopic("/topics/testMessaging")
+
         binding.btnAddCliente.setOnClickListener {
-            dialog = requireContext().createDialog(R.layout.add_client_layout, true)
+            findNavController().navigate(R.id.action_navigation_home_to_addClientFragment)
 
-            val button = dialog.findViewById<MaterialButton>(R.id.btnAddClient)
-            val tfName = dialog.findViewById<EditText>(R.id.tfNameClient)
-            val tfAddress = dialog.findViewById<EditText>(R.id.tfAddressClient)
-            val tfPhone = dialog.findViewById<EditText>(R.id.tfPhoneClient)
-            val tfEmail = dialog.findViewById<EditText>(R.id.tfEmailClient)
-            val tfPassword = dialog.findViewById<EditText>(R.id.tfPasswordClient)
-            button.setOnClickListener {
+            /*
+            val notificationData=JSONObject()
+            val notifcationBody = JSONObject()
+            val notification = JSONObject()
 
-                if (tfName.text.toString().isEmpty()){
-                    tfName.error="Favor de completar todos los campos"
-                    return@setOnClickListener
-                }
-                if (tfAddress.text.toString().isEmpty()){
-                    tfAddress.error="Favor de completar todos los campos"
-                    return@setOnClickListener
-                }
-                if (tfPhone.text.toString().isEmpty()) {
-                    tfPhone.error="Favor de completar todos los campos"
-                    return@setOnClickListener
-
-                }
-                if (tfEmail.text.toString().isEmpty()) {
-                    tfEmail.error="Favor de completar todos los campos"
-                    return@setOnClickListener
-
-                }
-                if (tfPassword.text.toString().isEmpty()) {
-                    tfPassword.error="Favor de completar todos los campos"
-                    return@setOnClickListener
-
-                }
-                //dialog.dismiss()
-                val obj= Client(
-                    "",
-                    Name=tfName.text.toString(),
-                    Ubicacion = tfAddress.text.toString(),
-                    Phone = tfPhone.text.toString(),
-                    "",
-                    Email = tfEmail.text.toString(),
-                    Password = tfEmail.text.toString(),
-                )
-                dialog.dismiss()
-
-                model.registerClient(
-                    email = tfEmail.text.toString(),
-                    password = tfPassword.text.toString()
-                    ,client = obj)
+            try {
+                notificationData.put("tokenTest","198AA9S8FA8S")
+                notificationData.put("routeId","Amealco- Parque Qto.")
+                notificationData.put("tokenCase",false)
+                notifcationBody.put("title", "Ruta Amealco Qto iniciada")
+                notifcationBody.put("message", "El conductor a iniciado la ruta")   //Enter your notification message
+                notifcationBody.put("data",notificationData)
+                notification.put("to", "/topics/testMessaging")
+                notification.put("data", notifcationBody)
+            } catch (e: JSONException) {
+                Log.e("TAG", "onCreate: " + e.message)
             }
-            dialog.show()
-        }
 
-        model.register.observe(requireActivity()){ state->
-            when(state){
-                is UiState.Failure->{
-                    dialog.dismiss()
-                    state.error?.let { toast(it) }
-                }
-                is UiState.Loading->{
-                    dialog = requireContext().createDialog(R.layout.loading_layout, true)
-                    dialog.show()
+            model.makeNot(notification)
 
-                }
-                is UiState.Success->{
+             */
 
-                    dialog.dismiss()
-                    toast(state.data)
 
-                }
+            /*
+            val topic = "/topics/testMessaging" //topic has to match what the receiver subscribed to
+
+            val notificationData=JSONObject()
+            val notification = JSONObject()
+            val notifcationBody = JSONObject()
+
+            try {
+                notificationData.put("tokenTest","198AA9S8FA8S")
+                notificationData.put("routeId","Amealco- Parque Qto.")
+                notificationData.put("tokenCase",false)
+                notifcationBody.put("title", "Ruta Amealco Qto iniciada")
+                notifcationBody.put("message", "El conductor a iniciado la ruta")   //Enter your notification message
+                notifcationBody.put("data",notificationData)
+                notification.put("to", topic)
+                notification.put("data", notifcationBody)
+                Log.e("TAG", "try")
+            } catch (e: JSONException) {
+                Log.e("TAG", "onCreate: " + e.message)
             }
+
+            sendNotification(notification)
+
+             */
 
         }
 
@@ -121,8 +127,10 @@ class HomeFragment : Fragment() {
         }
 
         binding.btnAddRoute.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_home_to_createRouteFragment)
+            findNavController().navigate(R.id.action_navigation_home_to_addRouteFragment)
         }
+
+        model.getRoutes()
     }
 
     override fun onDestroyView() {
@@ -136,5 +144,42 @@ class HomeFragment : Fragment() {
         nav.show()
         val toolbar=requireActivity().findViewById<Toolbar>(R.id.toolBarActivity)
         toolbar.hide()
+    }
+
+    private fun observers(){
+        model.routes.observe(requireActivity()){ listRoutes->
+            when(listRoutes){
+                is UiState.Failure->{
+                }
+
+                is UiState.Success->{
+                    val itemAdapter=AdapterRoutes(listRoutes.data){ route ->
+                        val bundle = bundleOf(
+                            "name" to route.name,
+                            "driver" to route.driver,
+                            "client" to route.client,
+                            "noRequWorkers" to route.noRequWorkers,
+                            "noReclWorkers" to route.noReclWorkers,
+                            "noRealWorkers" to route.noRealWorkers,
+                            "idDriver" to route.idDriver,
+                            "createdItem" to route.createdItem,
+                            "startLat" to route.startPoint!!.latitude,
+                            "startLng" to route.startPoint!!.longitude,
+                            "endLat" to route.endPoint!!.latitude,
+                            "endLng" to route.endPoint!!.longitude,
+                            "status" to route.status
+                        )
+                        Log.d("onclickItemAdapter",route.toString())
+                        findNavController().navigate(R.id.action_navigation_home_to_routeDetailsFragment,bundle)
+                    }
+                    binding.rvRoutes.layoutManager = LinearLayoutManager(context)
+                    binding.rvRoutes.adapter = itemAdapter
+                }
+                is UiState.Loading->{
+                    Log.d("gettingRoutes","Loading")
+                }
+                else -> {}
+            }
+        }
     }
 }

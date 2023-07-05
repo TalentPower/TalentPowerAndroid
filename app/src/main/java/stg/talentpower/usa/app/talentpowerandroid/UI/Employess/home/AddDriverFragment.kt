@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import stg.talentpower.usa.app.talentpowerandroid.Model.Driver
 import stg.talentpower.usa.app.talentpowerandroid.Model.ImagesModel
 import stg.talentpower.usa.app.talentpowerandroid.R
+import stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.ViewModels.AddDriverViewModel
 import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
 import stg.talentpower.usa.app.talentpowerandroid.Util.UploadImagesDriverConstants
 import stg.talentpower.usa.app.talentpowerandroid.Util.createDialog
@@ -51,30 +52,20 @@ class AddDriverFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        val nav=requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
-        nav.hide()
-        val toolbar=requireActivity().findViewById<Toolbar>(R.id.toolBarActivity)
-        toolbar.show()
-
-
-
-
         dialog = requireContext().createDialog(R.layout.loading_layout, false)
 
         binding.btnSaveDriver.setOnClickListener {
 
              driver= Driver(
                 "",
+                 "",
                 binding.tfName.text.toString(),
                 binding.tfAddress.text.toString(),
                 binding.tfPhone.text.toString(),
                 binding.tfPhoneEmergency.text.toString(),
                 binding.tfNSS.text.toString(),
                 binding.tfBankKey.text.toString(),
-                binding.tfEmail.text.toString(),
-                binding.tfPassword.text.toString(),
-                "Driver",
+                "driver",
                 "",
                 listImages
             )
@@ -135,7 +126,7 @@ class AddDriverFragment : Fragment() {
                     is UiState.Failure->{
                         state.error?.let { error->
                             val editText = dialog.findViewById<com.google.android.material.textview.MaterialTextView>(R.id.txtDialog)
-                            editText.setText(error)
+                            editText.text = error
                         }
                     }
                     is UiState.Loading->{
@@ -143,9 +134,7 @@ class AddDriverFragment : Fragment() {
                     }
                 }
             }
-
         }
-
     }
 
     override fun onDestroyView() {
@@ -190,58 +179,55 @@ class AddDriverFragment : Fragment() {
         }
     }
 
-    private fun selectFile() {
+    private fun selectFile(){
         activityResultLauncher.launch("image/*")
     }
 
     private val activityResultLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
         val img= ImagesModel()
-        img.Image=it
+        img.image=it
         when(case){
             UploadImagesDriverConstants.ACTA_NACIMIENTO->{
-                img.Name= UploadImagesDriverConstants.ACTA_NACIMIENTO
-                //listImages.add(img)
-
+                img.name= UploadImagesDriverConstants.ACTA_NACIMIENTO
                 binding.btnActa.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.ic_done)
             }
             UploadImagesDriverConstants.LICENCIA->{
-                img.Name=UploadImagesDriverConstants.LICENCIA
+                img.name=UploadImagesDriverConstants.LICENCIA
                 listImages.add(img)
                 binding.btnLicencia.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.ic_done)
             }
             UploadImagesDriverConstants.RFC->{
-                img.Name=UploadImagesDriverConstants.RFC
+                img.name=UploadImagesDriverConstants.RFC
                 listImages.add(img)
                 binding.btnRFC.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.ic_done)
             }
             UploadImagesDriverConstants.NSS->{
-                img.Name=UploadImagesDriverConstants.NSS
+                img.name=UploadImagesDriverConstants.NSS
                 listImages.add(img)
                 binding.btnNSS.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.ic_done)
             }
             UploadImagesDriverConstants.SOLI_EMPLEO->{
-                img.Name=UploadImagesDriverConstants.SOLI_EMPLEO
+                img.name=UploadImagesDriverConstants.SOLI_EMPLEO
                 listImages.add(img)
                 binding.btnSolicitud.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.ic_done)
             }
             UploadImagesDriverConstants.CERT_ESTUDIOS->{
-                img.Name=UploadImagesDriverConstants.CERT_ESTUDIOS
+                img.name=UploadImagesDriverConstants.CERT_ESTUDIOS
                 listImages.add(img)
                 binding.btnCertEstudios.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.ic_done)
             }
             UploadImagesDriverConstants.CURP->{
-                img.Name=UploadImagesDriverConstants.CURP
+                img.name=UploadImagesDriverConstants.CURP
                 listImages.add(img)
                 binding.btnCURP.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.ic_done)
             }
             UploadImagesDriverConstants.INE->{
-                img.Name=UploadImagesDriverConstants.INE
+                img.name=UploadImagesDriverConstants.INE
                 listImages.add(img)
                 binding.btnINE.setCompoundDrawablesWithIntrinsicBounds(0,0,0,R.drawable.ic_done)
             }
         }
     }
-
 
     private fun clear(){
         binding.tfAddress.text.clear()
@@ -260,5 +246,13 @@ class AddDriverFragment : Fragment() {
         binding.btnLicencia.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0)
         binding.btnActa.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0)
         binding.btnNSS.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val nav=requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
+        nav.hide()
+        val toolbar=requireActivity().findViewById<Toolbar>(R.id.toolBarActivity)
+        toolbar.show()
     }
 }

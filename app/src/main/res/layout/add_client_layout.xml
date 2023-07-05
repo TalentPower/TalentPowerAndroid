@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_gravity="center"
     android:gravity="center"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <EditText
         android:id="@+id/tfNameClient"
@@ -49,11 +49,18 @@
         android:ems="10"
         android:hint="password"
         android:inputType="textPassword" />
+    <EditText
+        android:id="@+id/tfClientWarranty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Warranty"
+        android:inputType="number"
+        android:layout_below="@id/tfPasswordClient"/>
 
     <Button
         android:id="@+id/btnAddClient"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tfPasswordClient"
+        android:layout_below="@+id/tfClientWarranty"
         android:text="@string/btn_guardar" />
 </RelativeLayout>
