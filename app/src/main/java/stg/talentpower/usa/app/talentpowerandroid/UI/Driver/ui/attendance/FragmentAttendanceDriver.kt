@@ -1,4 +1,4 @@
-package stg.talentpower.usa.app.talentpowerandroid.UI.Driver.ui.home
+package stg.talentpower.usa.app.talentpowerandroid.UI.Driver.ui.attendance
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import stg.talentpower.usa.app.talentpowerandroid.databinding.FragmentHomeBinding
+import dagger.hilt.android.AndroidEntryPoint
+import stg.talentpower.usa.app.talentpowerandroid.databinding.FragmentAttendanceDriverBinding
 
-class HomeFragment : Fragment() {
+@AndroidEntryPoint
+class FragmentAttendanceDriver : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentAttendanceDriverBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -22,14 +24,14 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+        val attendanceViewModel =
+            ViewModelProvider(this).get(AttendanceViewModel::class.java)
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentAttendanceDriverBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
+        val textView: TextView = binding.textDashboard
+        attendanceViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root

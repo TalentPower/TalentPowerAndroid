@@ -125,6 +125,10 @@ class LoginFragment : Fragment() {
                 when(user){
                     is Driver2->{
                         Log.d("rol","Soy driver")
+                        activity?.finish()
+                        val i= Intent(context,DriverActivity::class.java)
+                        activity?.startActivity(i)
+                        activity?.finish()
                     }
                     is Employee->{
                         requireActivity().finish()

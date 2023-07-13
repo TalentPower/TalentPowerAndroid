@@ -3,23 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_home_driver">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Driver.ui.home.HomeFragment"
+        android:id="@+id/navigation_home_driver"
+        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Driver.ui.home.FragmentHomeDriver"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home_driver" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Driver.ui.dashboard.DashboardFragment"
+        android:id="@+id/navigation_dashboard_driver"
+        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Driver.ui.attendance.FragmentAttendanceDriver"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_attendance_driver" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Driver.ui.notifications.NotificationsFragment"
+        android:id="@+id/navigation_notifications_driver"
+        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Driver.ui.settings.FragmentSettingsDriver"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_settings_driver" />
 </navigation>

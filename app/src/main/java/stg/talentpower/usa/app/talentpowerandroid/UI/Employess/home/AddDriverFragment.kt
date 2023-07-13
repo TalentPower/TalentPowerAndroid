@@ -65,6 +65,7 @@ class AddDriverFragment : Fragment() {
                 binding.tfPhoneEmergency.text.toString(),
                 binding.tfNSS.text.toString(),
                 binding.tfBankKey.text.toString(),
+                 "",
                 "driver",
                 "",
                 listImages

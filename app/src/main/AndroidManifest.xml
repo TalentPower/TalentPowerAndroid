@@ -2,11 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <!-- Always include this permission -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Include only if your app benefits from precise location access. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /><!--For Our Service-->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /><!--Need for get the location in foreground and n GOOGLE PLAY we have to give proper reason otherwise they won't allow this permision app.-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".MyApp"
@@ -33,6 +35,9 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
+        <service android:name=".Repository.Location.LocationService"
+            android:foregroundServiceType="location"
+            android:stopWithTask="false"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -50,7 +55,7 @@
         </activity>
         <activity
             android:name=".UI.Employess.EmployessActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
     </application>
 
 </manifest>

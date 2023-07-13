@@ -93,18 +93,17 @@ class AuthRepositoryImp(
                     if (driver==null){
                         val employeeClient=getEmployeeClient(userid = auth.user?.uid?:"",getFCMDeviceToken())
                         employeeClient?.let {
-                            appPreferences.edit().putString(SharedPrefConstants.USER_SESSION,gson.toJson(employeeClient)).apply()
+                            appPreferences.edit().putString(SharedPrefConstants.USER_SESSION,gson.toJson(it)).apply()
+                            result.invoke(UiState.Success(it))
                         }
-                        if (employeeClient!=null){
-                            result.invoke(UiState.Success(employeeClient))
-                        }
-                    }else {
-                        appPreferences.edit().putString(SharedPrefConstants.USER_SESSION,gson.toJson(driver)).apply()
-                        result.invoke(UiState.Success(driver))
+                    }else driver.let {
+                        Log.d("userDriver","$driver")
+                        appPreferences.edit().putString(SharedPrefConstants.USER_SESSION,gson.toJson(it)).apply()
+                        result.invoke(UiState.Success(it))
                     }
-                }else {
-                    appPreferences.edit().putString(SharedPrefConstants.USER_SESSION,gson.toJson(employee)).apply()
-                    result.invoke(UiState.Success(employee))
+                }else employee.let { emp->
+                    appPreferences.edit().putString(SharedPrefConstants.USER_SESSION,gson.toJson(emp)).apply()
+                    result.invoke(UiState.Success(emp))
                 }
             }
         }catch (e:Exception){
@@ -138,26 +137,24 @@ class AuthRepositoryImp(
     }
 
     override suspend fun getSession(result: (Any?) -> Unit) {
-        runBlocking(Dispatchers.IO){
-            val user_str = appPreferences.getString(SharedPrefConstants.USER_SESSION,null)
-            if (user_str == null){
-                result.invoke(null)
-            }else{
-                val tempData = gson.fromJson(user_str, Employee::class.java)
-                Log.d("getSesionRol", tempData.rol)
-                when(tempData.rol){
-                    "worker"->{
-                        val worker = gson.fromJson(user_str, Worker::class.java)
-                        result.invoke(worker)
-                    }
-                    "employee"->{
-                        val employee = gson.fromJson(user_str, Employee::class.java)
-                        result.invoke(employee)
-                    }
-                    "employeeClient"->{
-                        val employeeClient = gson.fromJson(user_str, EmployeeClient::class.java)
-                        result.invoke(employeeClient)
-                    }
+        val user_str = appPreferences.getString(SharedPrefConstants.USER_SESSION,null)
+        if (user_str == null){
+            result.invoke(null)
+        }else{
+            val tempData = gson.fromJson(user_str, Employee::class.java).rol
+            Log.d("getSesionRol", tempData)
+            when(tempData){
+                "driver"->{
+                    val driver = gson.fromJson(user_str, Driver2::class.java)
+                    result.invoke(driver)
+                }
+                "employee"->{
+                    val employee = gson.fromJson(user_str, Employee::class.java)
+                    result.invoke(employee)
+                }
+                "employeeClient"->{
+                    val employeeClient = gson.fromJson(user_str, EmployeeClient::class.java)
+                    result.invoke(employeeClient)
                 }
             }
         }

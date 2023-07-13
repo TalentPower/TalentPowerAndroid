@@ -2,9 +2,11 @@ package stg.talentpower.usa.app.talentpowerandroid.di
 
 import android.content.SharedPreferences
 import android.location.Geocoder
+import android.location.LocationManager
 import com.android.volley.RequestQueue
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.google.gson.Gson
@@ -55,11 +57,14 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideDriverhRepository(
+        realtimeDatabase: FirebaseDatabase,
         database: FirebaseFirestore,
         auth: FirebaseAuth,
-        storageReference: StorageReference
+        storageReference: StorageReference,
+        appPreferences: SharedPreferences,
+        gson: Gson
     ) : DriverRepository{
-        return DriverRepositoryImp(auth,database,storageReference)
+        return DriverRepositoryImp(auth,database,storageReference,realtimeDatabase,appPreferences,gson)
     }
 
     @Provides
@@ -74,10 +79,11 @@ object RepositoryModule {
     @Singleton
     fun providesLocationhRepository(
         location:FusedLocationProviderClient,
+        locationManager:LocationManager,
         geocoder:Geocoder,
         database: FirebaseFirestore
     ): LocationRepository {
-        return LocationRepositoryImp(location,geocoder,database)
+        return LocationRepositoryImp(location,locationManager,geocoder,database)
     }
 
     @Provides

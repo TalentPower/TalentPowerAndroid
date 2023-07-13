@@ -9,6 +9,7 @@ data class Driver(
     var emergencyPhone: String = "",
     var NSS:String="",
     var bankKey:String="",
+    var image:String="",
     var rol:String="driver",
     var route:String="",
     val images: MutableList<ImagesModel> = arrayListOf()
@@ -23,6 +24,7 @@ data class Driver2(
     var emergencyPhone: String = "",
     var NSS:String="",
     var bankKey:String="",
+    var image:String="",
     var rol:String="driver",
     var route:String="",
     val images: MutableList<ImagesModel2> = arrayListOf()

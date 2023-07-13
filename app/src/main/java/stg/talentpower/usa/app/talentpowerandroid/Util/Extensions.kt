@@ -4,15 +4,20 @@ import android.R
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -69,6 +74,20 @@ object Date{
         val now = Date()
         return formatter.format(now)
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun currentDataObject(): LocalDateTime? {
+        val calendar = Calendar.getInstance()
+
+        return LocalDateTime.of(
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH),
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
+            calendar.get(Calendar.SECOND)
+        )
+    }
 }
 
 object TimePickerHelper{
@@ -102,5 +121,19 @@ object TimePickerHelper{
     }
 }
 
+
+
 fun String.isValidEmail() =
     isNotEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(this).matches()
+
+
+fun Context.hasLocationPermission(): Boolean {
+    return ContextCompat.checkSelfPermission(
+        this,
+        android.Manifest.permission.ACCESS_COARSE_LOCATION
+    ) == PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+}

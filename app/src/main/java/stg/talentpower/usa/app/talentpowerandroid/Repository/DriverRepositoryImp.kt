@@ -1,5 +1,6 @@
 package stg.talentpower.usa.app.talentpowerandroid.Repository
 
+import android.content.SharedPreferences
 import android.net.Uri
 import android.util.Log
 import com.google.firebase.FirebaseException
@@ -7,28 +8,51 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ServerValue
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.database.ktx.snapshots
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import stg.talentpower.usa.app.talentpowerandroid.Model.Driver
 import stg.talentpower.usa.app.talentpowerandroid.Model.Driver2
-import stg.talentpower.usa.app.talentpowerandroid.Model.Employee
 import stg.talentpower.usa.app.talentpowerandroid.Model.ImagesModel
+import stg.talentpower.usa.app.talentpowerandroid.Model.LocationEvent
+import stg.talentpower.usa.app.talentpowerandroid.Model.Stop
 import stg.talentpower.usa.app.talentpowerandroid.Util.Cities
 import stg.talentpower.usa.app.talentpowerandroid.Util.Country
 import stg.talentpower.usa.app.talentpowerandroid.Util.Date
 import stg.talentpower.usa.app.talentpowerandroid.Util.FireStoreCollection
+import stg.talentpower.usa.app.talentpowerandroid.Util.FireStoreDocumentSubcolection
 import stg.talentpower.usa.app.talentpowerandroid.Util.FirebaseStorageConstants.NOTE_IMAGES
+import stg.talentpower.usa.app.talentpowerandroid.Util.SharedPrefConstants
 import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
 
-class DriverRepositoryImp (
+class DriverRepositoryImp(
     val auth: FirebaseAuth,
     val database: FirebaseFirestore,
-    val storageReference: StorageReference) :DriverRepository{
+    val storageReference: StorageReference,
+    val realtimeDatabase: FirebaseDatabase,
+    val appPreferences: SharedPreferences,
+    val gson: Gson
+) :DriverRepository{
+
 
     override fun registerDriver(email: String, password: String, driver: Driver, result: (UiState<String>) -> Unit){
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
@@ -66,7 +90,6 @@ class DriverRepositoryImp (
             )
         }
     }
-
     override fun updateDriverInfo(driver: Driver2) {
         database.collection(FireStoreCollection.DRIVERS)
             .document(Country.MEXICO)
@@ -79,7 +102,6 @@ class DriverRepositoryImp (
 
             }
     }
-
     fun updateDriverInfo(driver: Driver, result: (UiState<String>) -> Unit) {
         val document = database.collection("users").document(Country.MEXICO).collection(Cities.QUERETARO).document(driver.id)
         document.set(driver)
@@ -100,7 +122,6 @@ class DriverRepositoryImp (
                 result.invoke(UiState.Failure(it.localizedMessage))
             }
     }
-
     fun uploadMultipleFile(id:String,fileUri: List<ImagesModel>, result: (UiState<String>) -> Unit){
         try {
             val listURL= ArrayList<ImagesModel>()
@@ -122,7 +143,6 @@ class DriverRepositoryImp (
             result.invoke(UiState.Failure(e.localizedMessage))
         }
     }
-
     override suspend fun uploadMultipleFile(fileUri: List<Uri>, onResult: (UiState<List<Uri>>) -> Unit) {
         try {
             val uri: List<Uri> = withContext(Dispatchers.IO) {
@@ -145,25 +165,7 @@ class DriverRepositoryImp (
             onResult.invoke(UiState.Failure(e.message))
         }
     }
-
     override suspend fun getDrivers(onResult: (UiState<List<Driver2>>) -> Unit) {
-        /*
-        database.collection(FireStoreCollection.DRIVERS)
-            .document(Country.MEXICO)
-            .collection(Cities.QUERETARO)
-            .get()
-            .addOnCompleteListener {task->
-                if (task.isSuccessful){
-                    val doc=task.result
-                    val types: List<Driver2> = doc.toObjects(Driver2::class.java)
-                    onResult.invoke(UiState.Success(types))
-                }
-            }.addOnFailureListener {
-                onResult.invoke(UiState.Failure(it.localizedMessage))
-            }
-
-
-         */
         try {
             val drivers=database.collection("users")
                 .document(Country.MEXICO)
@@ -178,4 +180,72 @@ class DriverRepositoryImp (
             onResult.invoke(UiState.Failure(e.localizedMessage))
         }
     }
+    override suspend fun updateLocation(idUser: String,location:LocationEvent) {
+        try {
+            realtimeDatabase.getReference("drivers").child(idUser).setValue(location).await()
+        }catch (e:Exception){
+            e.localizedMessage?.let { Log.d("exepcion", it) }
+        }
+
+    }
+    override suspend fun checkInOut(idUser:String,idRoute:String,isCheked:Boolean,onResult:(UiState<String>)-> Unit) {
+        try {
+            val list= mutableListOf("worker1","worker2")
+            val data= hashMapOf<String,Any>()
+            data["started"]=ServerValue.TIMESTAMP
+            data["status"]=0
+            data["workers"]= list
+
+            realtimeDatabase
+                .getReference("route_status")
+                .child(idRoute)
+                .setValue(data)
+                .await()
+
+        }catch (e:Exception){
+            UiState.Failure(e.localizedMessage)
+        }
+
+    }
+    override suspend fun getLocalDriver(onResult: (Driver2?) -> Unit) {
+        val user_str = appPreferences.getString(SharedPrefConstants.USER_SESSION,null)
+        if (user_str!!.isNotBlank()){
+            val driver = gson.fromJson(user_str, Driver2::class.java)
+            onResult.invoke(driver)
+        }
+    }
+    override fun checkStatus(idRoute:String): Flow<UiState<Int>> {
+        return realtimeDatabase
+            .getReference("route_status")
+            .child(idRoute)
+            .snapshots
+            .mapNotNull{
+                UiState.Success(it.child("status").value.toString().toInt())
+            }
+            .catch { UiState.Failure(it.localizedMessage) }
+    }
+
+    override suspend fun getPoints(idRoute:String): List<Stop>? {
+        return try {
+            val list=database
+                .collection(FireStoreCollection.ROUTES)
+                .document(Country.MEXICO)
+                .collection(Cities.QUERETARO)
+                .document(idRoute)
+                .collection(FireStoreDocumentSubcolection.STOPS)
+                .get()
+                .await()
+                .toObjects(Stop::class.java)
+            list
+        }catch (e:Exception){
+            null
+        }
+    }
+
+    override fun logout(result: () -> Unit) {
+        auth.signOut()
+        appPreferences.edit().putString(SharedPrefConstants.USER_SESSION,null).apply()
+        result.invoke()
+    }
+
 }

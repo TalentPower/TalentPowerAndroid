@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_home_employee">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_home_employee"
         android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home_employess" >
@@ -30,13 +30,13 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_notifications_employee"
         android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications_employess" />
 
     <fragment
-        android:id="@+id/navigation_settings"
+        android:id="@+id/navigation_settings_employee"
         android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.setings.SetingsFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_setings_employess" />

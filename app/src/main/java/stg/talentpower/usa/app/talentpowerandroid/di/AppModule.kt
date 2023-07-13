@@ -3,6 +3,7 @@ package stg.talentpower.usa.app.talentpowerandroid.di
 import android.content.Context
 import android.content.SharedPreferences
 import android.location.Geocoder
+import android.location.LocationManager
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -40,6 +41,11 @@ object AppModule {
     @Provides
     @Singleton
     fun provideGeocoder(@ApplicationContext context: Context): Geocoder = Geocoder(context, Locale.getDefault())
+
+    @Provides
+    @Singleton
+    fun provideLocationManager(@ApplicationContext context: Context):LocationManager= context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
 
     @Provides
     @Singleton

@@ -17,8 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddClientViewModel @Inject constructor(
-    private val locationRepository: LocationRepository,
-    private val repositoryClient: ClientRepository,
+    val locationRepository: LocationRepository,
+    val repositoryClient: ClientRepository,
 ): ViewModel() {
 
     private val _registerClient = MutableLiveData<UiState<String>>()

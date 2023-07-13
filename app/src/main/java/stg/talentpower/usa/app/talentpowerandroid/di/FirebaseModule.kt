@@ -36,7 +36,7 @@ object FirebaseModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseStroageInstance(): StorageReference {
+    fun provideFirebaseStorageInstance(): StorageReference {
         return Firebase.storage.reference
     }
 
