@@ -1,5 +1,6 @@
 package stg.talentpower.usa.app.talentpowerandroid.Repository
 
+import kotlinx.coroutines.flow.Flow
 import stg.talentpower.usa.app.talentpowerandroid.Model.Route
 import stg.talentpower.usa.app.talentpowerandroid.Model.Worker
 import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
@@ -7,7 +8,7 @@ import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
 interface WorkerRepository {
 
     fun getWorkers(result:(UiState<List<Worker>>) -> Unit)
-    fun getRouteWorkers(idRoute:String,result:(UiState<List<Worker>>) -> Unit)
+    fun getRouteWorkers(idRoute:String):Flow<UiState<List<Worker>>>
     fun getWorker(id:String,result: (UiState<Worker>) -> Unit)
     fun editWorker(id:String,result: (UiState<String>) -> Unit)
     fun deleteWorker(worker:Worker,result: (UiState<String>) -> Unit)

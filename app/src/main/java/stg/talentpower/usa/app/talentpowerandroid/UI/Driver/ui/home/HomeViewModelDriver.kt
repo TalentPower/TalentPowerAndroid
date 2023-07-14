@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.mapbox.bindgen.Expected
+import com.mapbox.geojson.Point
 import com.mapbox.navigation.base.trip.model.RouteProgress
 import com.mapbox.navigation.core.directions.session.RoutesObserver
 import com.mapbox.navigation.core.directions.session.RoutesUpdatedResult
@@ -44,6 +45,7 @@ import stg.talentpower.usa.app.talentpowerandroid.Model.LocationEvent
 import stg.talentpower.usa.app.talentpowerandroid.Model.Stop
 import stg.talentpower.usa.app.talentpowerandroid.Repository.DriverRepository
 import stg.talentpower.usa.app.talentpowerandroid.Repository.LocationRepository
+import stg.talentpower.usa.app.talentpowerandroid.Repository.RouteRepository
 import stg.talentpower.usa.app.talentpowerandroid.Util.Date
 import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
 import stg.talentpower.usa.app.talentpowerandroid.Util.Util
@@ -54,7 +56,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModelDriver @Inject constructor(
     private val driverRepository:DriverRepository,
-    private val locationRepository:LocationRepository
+    private val locationRepository:LocationRepository,
+    private val routeRepository:RouteRepository
 ): ViewModel() {
 
     private val _lastLocation:MutableLiveData<LatLng> by lazy {
@@ -78,6 +81,9 @@ class HomeViewModelDriver @Inject constructor(
 
     private val _status=MutableLiveData<UiState<Int>>()
     val status:LiveData<UiState<Int>> get() = _status
+
+    private val _endPoint= MutableLiveData<Point>()
+    val endPoint: MutableLiveData<Point> get() = _endPoint
 
 
     fun getPoints(){
@@ -124,6 +130,12 @@ class HomeViewModelDriver @Inject constructor(
         _currentLocation.value=location
         viewModelScope.launch (Dispatchers.IO){
             driverRepository.updateLocation(idUser = driver.value!!.id, location = location)
+        }
+    }
+
+    fun getEnd(){
+        viewModelScope.launch (Dispatchers.IO){
+            _endPoint.postValue(routeRepository.getEndPoint(idRoute = driver.value!!.route))
         }
     }
 

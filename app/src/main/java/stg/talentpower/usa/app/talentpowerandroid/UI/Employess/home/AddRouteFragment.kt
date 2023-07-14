@@ -72,16 +72,19 @@ class AddRouteFragment : Fragment() {
             )
             Log.d("markerFragment",stop.toString())
             model.setStart(stop)
-            route.timeStart= bundle.getString("startTime")!!
+            //route.timeStart= bundle.getString("startTime")!!
         }
 
         setFragmentResultListener("endCoord"){ _, bundle ->
-            model.setEnd(
-                LatLng(bundle.getDouble("endCoordLat")
-                    ,bundle.getDouble("endCoordLng")
-                )
+            val stop= Stop(
+                bundle.getString("endName",""),
+                bundle.getString("endAddress",""),
+                GeoPoint(bundle.getDouble("endCoordLat"),bundle.getDouble("endCoordLng")),
+                bundle.getString("endTime","")
             )
-            route.timeEnd= bundle.getString("endTime")!!
+            model.setEnd(stop)
+
+            //route.timeEnd= bundle.getString("endTime")!!
         }
 
         mapView=binding.mapViewCreateRoute
@@ -136,16 +139,16 @@ class AddRouteFragment : Fragment() {
         if (model.listClients.value==null)model.getCLients()
 
         binding.btnSaveRoute.setOnClickListener {
-            val end=GeoPoint(model.end.value!!.latitude,model.end.value!!.longitude)
+            //val end=GeoPoint(model.end.value!!.latitude,model.end.value!!.longitude)
             route.name=binding.tfNameRoute.text.toString()
             route.driver=driver.name
             route.idDriver=driver.id
             route.client=client.name
             route.noRequWorkers=binding.tfRequWorkersRoute.text.toString().toInt()
-            route.startPoint=model.start.value!!.location
-            route.endPoint=end
+            //route.startPoint=model.start.value!!.location
+            //route.endPoint=end
             route.status=RouteStatus.CREADA
-            model.createRoute(route, model.start.value!!)
+            model.createRoute(route)
         }
 
     }
@@ -165,8 +168,8 @@ class AddRouteFragment : Fragment() {
             if (it!=null) {
                 if (::markerEnd.isInitialized) markerEnd.remove()
                 markerEnd= googleMap.addMarker {
-                    position(it)
-                    title("start")
+                    position(LatLng(it.location!!.latitude,it.location!!.longitude))
+                    title("end")
                 }!!
             }
         }
@@ -213,13 +216,7 @@ class AddRouteFragment : Fragment() {
             when(state){
                 is UiState.Success->{
                     toast(state.data)
-                    driver.route=binding.tfNameRoute.text.toString()
-                    model.updateDriver(driver)
-                    if (view!=null){
-                        view?.post {
-                            findNavController().popBackStack()
-                        }
-                    }
+                    findNavController().popBackStack()
                 }
 
                 is UiState.Failure->{
@@ -264,10 +261,10 @@ class AddRouteFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        val nav=requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
-        nav.hide()
-        val toolbar=requireActivity().findViewById<Toolbar>(R.id.toolBarActivity)
-        toolbar.show()
+        //val nav=requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
+        //nav.hide()
+        //val toolbar=requireActivity().findViewById<Toolbar>(R.id.toolBarActivity)
+        //toolbar.show()
     }
 
 }

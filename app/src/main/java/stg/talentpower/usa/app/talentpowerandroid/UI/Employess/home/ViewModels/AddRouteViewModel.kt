@@ -30,8 +30,8 @@ class AddRouteViewModel @Inject constructor(
     private val _start = MutableLiveData<Stop>()
     val start: LiveData<Stop> get() = _start
 
-    private val _end = MutableLiveData<LatLng>()
-    val end: LiveData<LatLng> get() = _end
+    private val _end = MutableLiveData<Stop>()
+    val end: LiveData<Stop> get() = _end
 
     private var _registerRoute= MutableLiveData<UiState<String>>()
     val registerRoute:LiveData<UiState<String>> get() = _registerRoute
@@ -47,7 +47,7 @@ class AddRouteViewModel @Inject constructor(
         _start.postValue(data)
     }
 
-    fun setEnd(data: LatLng){
+    fun setEnd(data: Stop){
         _end.postValue(data)
     }
 
@@ -69,11 +69,11 @@ class AddRouteViewModel @Inject constructor(
         }
     }
 
-    fun createRoute(route:Route,stop:Stop){
+    fun createRoute(route:Route){
         _registerRoute.value=UiState.Loading
         viewModelScope.launch (Dispatchers.IO){
-            routeRepository.createRoute(route,stop){
-                _registerRoute.value=it
+            routeRepository.createRoute(route, start.value!!,end.value!!){
+                _registerRoute.postValue(it)
             }
         }
     }

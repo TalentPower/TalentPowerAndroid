@@ -7,8 +7,12 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.WriteBatch
+import com.google.firebase.firestore.ktx.snapshots
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import stg.talentpower.usa.app.talentpowerandroid.Model.Stop
@@ -42,10 +46,15 @@ class WorkerRepositoryImp(val database: FirebaseFirestore) : WorkerRepository {
             }
     }
 
-    override fun getRouteWorkers(idRoute: String, result: (UiState<List<Worker>>) -> Unit) {
-        database.collection(FireStoreCollection.WORKERS)
+    override fun getRouteWorkers(idRoute: String) : Flow<UiState<List<Worker>>> {
+        return database.collection(FireStoreCollection.WORKERS)
             .document(Country.MEXICO)
-            .collection(Cities.QUERETARO)
+            .collection(Cities.QUERETARO).snapshots().mapNotNull { snapShot->
+                UiState.Success(snapShot.toObjects(Worker::class.java))
+            }.catch {
+                UiState.Failure(it.localizedMessage)
+            }
+                /*
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
                     result.invoke(UiState.Failure(e.localizedMessage))
@@ -72,6 +81,7 @@ class WorkerRepositoryImp(val database: FirebaseFirestore) : WorkerRepository {
             }
 
 
+                 */
     }
 
     override fun getWorker(id: String, result: (UiState<Worker>) -> Unit) {
@@ -103,7 +113,6 @@ class WorkerRepositoryImp(val database: FirebaseFirestore) : WorkerRepository {
     }
 
     override suspend fun clearListWorkers(idRoute: String, numRec:Int, tempList: List<Worker>) {
-
         val listWorkersToRemove= mutableListOf<String>()
         val batch: WriteBatch = database.batch()
         val doc=database.collection(FireStoreCollection.WORKERS)

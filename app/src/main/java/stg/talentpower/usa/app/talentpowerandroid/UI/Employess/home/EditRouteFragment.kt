@@ -1,6 +1,8 @@
 package stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home
 
+import android.annotation.SuppressLint
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuHost
@@ -60,6 +63,7 @@ class EditRouteFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("NewApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -78,8 +82,10 @@ class EditRouteFragment : Fragment() {
         id= arguments?.getString("name")!!
         toolBar.title = "Ruta: $id"
 
-        model.setStart(LatLng(requireArguments().getDouble("startLat"), requireArguments().getDouble("startLng")))
-        model.setEnd(LatLng(requireArguments().getDouble("endLat"), requireArguments().getDouble("endLng")))
+
+
+        //model.setStart(LatLng(requireArguments().getDouble("startLat"), requireArguments().getDouble("startLng")))
+        //model.setEnd(LatLng(requireArguments().getDouble("endLat"), requireArguments().getDouble("endLng")))
 
 
         binding.txtCliente.text=arguments?.getString("driver")
@@ -101,6 +107,7 @@ class EditRouteFragment : Fragment() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun observers() {
         model.stops.observe(requireActivity()){ list->
             when(list){
@@ -111,7 +118,6 @@ class EditRouteFragment : Fragment() {
 
                 }
                 is UiState.Success->{
-
                     if (list.data.isEmpty()){
                         setMarkers(null)
                         getdirections(null)
@@ -120,7 +126,6 @@ class EditRouteFragment : Fragment() {
                         val itemAdapter= AdapterStops(list.data){ btn,obj->
                             when(btn.id){
                                 R.id.btnImgEditStop->{
-
                                 }
 
                                 R.id.btnImgDeleteStop->{
@@ -130,10 +135,30 @@ class EditRouteFragment : Fragment() {
                                 }
                             }
                         }
+
+                        val templist=ArrayList<Stop>()
+                        templist.addAll(list.data)
+
+
+                        list.data.forEach { stop->
+                            if (stop.name.contains("Inicio")){
+                                Log.d("directions","Los el start : ${stop}")
+                                model.setStart(data = LatLng(stop.location!!.latitude,stop.location!!.longitude))
+                                templist.remove(stop)
+                            }
+                            if (stop.name.contains("Final")){
+                                Log.d("directions","Los el end : ${stop}")
+                                model.setEnd(data = LatLng(stop.location!!.latitude,stop.location!!.longitude))
+                                templist.remove(stop)
+                            }
+                        }
                         binding.rvStops.layoutManager = LinearLayoutManager(context)
                         binding.rvStops.adapter = itemAdapter
-                        setMarkers(list.data)
-                        getdirections(list.data)
+                        Log.d("directions", templist.toString())
+                        setMarkers(templist)
+                        getdirections(templist)
+
+
                     }
 
                 }
@@ -166,12 +191,17 @@ class EditRouteFragment : Fragment() {
             val loc=LatLng(stop.location!!.latitude,stop.location!!.longitude)
             list.add(loc)
         }
+
+        Log.d("directions","Los waypons $list")
+
         GoogleDirection.withServerKey(requireActivity().resources.getString(R.string.google_maps_key))
             .from(model.start.value!!)
             .and(list.toList())
             .to(model.end.value!!)
             .execute(onDirectionSuccess = { direction: Direction? ->
+                Log.d("directions", "La direccion entro")
                     if(direction!!.isOK) {
+                        Log.d("directions", "La direccion se codifico")
                         direction.routeList[0].legList.forEach { list->
                             val directionPositionList = list.directionPoint
                             val polylineOptions = DirectionConverter.createPolyline(
@@ -199,7 +229,6 @@ class EditRouteFragment : Fragment() {
     }
 
     private fun setMarkers(data: List<Stop>?) {
-
         lifecycleScope.launch {
             googleMap.clear()
             googleMap.addMarker {
@@ -267,7 +296,6 @@ class EditRouteFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        model.stopListener()
     }
 
 }

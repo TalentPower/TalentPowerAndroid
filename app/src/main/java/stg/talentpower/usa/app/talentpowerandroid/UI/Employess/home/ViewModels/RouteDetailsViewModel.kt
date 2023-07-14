@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import stg.talentpower.usa.app.talentpowerandroid.Model.Stop
 import stg.talentpower.usa.app.talentpowerandroid.Model.Worker
@@ -31,8 +33,10 @@ class RouteDetailsViewModel @Inject constructor(
 
     fun getRouteWorkers(idRoute:String){
         _realtimeWorkers.value=UiState.Loading
-        repositoryWorker.getRouteWorkers(idRoute) {
-            _realtimeWorkers.value=it
+        viewModelScope.launch(Dispatchers.IO){
+            repositoryWorker.getRouteWorkers(idRoute).collect{
+                _realtimeWorkers.postValue(it)
+            }
         }
     }
 
@@ -52,9 +56,9 @@ class RouteDetailsViewModel @Inject constructor(
 
     fun getStops(id:String){
         _stops.value=UiState.Loading
-        viewModelScope.launch {
-            repositoryRoute.getStops(id){
-                _stops.value=it
+        viewModelScope.launch (Dispatchers.IO){
+            repositoryRoute.getStops(id).collect{
+                _stops.postValue(it)
             }
         }
     }

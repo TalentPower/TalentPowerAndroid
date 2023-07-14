@@ -69,6 +69,7 @@ class HomeFragment : Fragment() {
 
         //FirebaseMessaging.getInstance().subscribeToTopic("/topics/testMessaging")
 
+        /*
         binding.btnAddCliente.setOnClickListener {
             findNavController().navigate(R.id.action_navigation_home_to_addClientFragment)
 
@@ -122,13 +123,7 @@ class HomeFragment : Fragment() {
 
         }
 
-        binding.btnAddDriver.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_home_to_addDriverFragment)
-        }
-
-        binding.btnAddRoute.setOnClickListener {
-            findNavController().navigate(R.id.action_navigation_home_to_addRouteFragment)
-        }
+         */
 
         model.getRoutes()
     }
@@ -140,17 +135,16 @@ class HomeFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        val nav=requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
-        nav.show()
-        val toolbar=requireActivity().findViewById<Toolbar>(R.id.toolBarActivity)
-        toolbar.hide()
+        //val nav=requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
+        //nav.show()
+        //val toolbar=requireActivity().findViewById<Toolbar>(R.id.toolBarActivity)
+        //toolbar.hide()
     }
 
     private fun observers(){
         model.routes.observe(requireActivity()){ listRoutes->
             when(listRoutes){
-                is UiState.Failure->{
-                }
+                is UiState.Failure->{}
 
                 is UiState.Success->{
                     val itemAdapter=AdapterRoutes(listRoutes.data){ route ->
@@ -163,13 +157,8 @@ class HomeFragment : Fragment() {
                             "noRealWorkers" to route.noRealWorkers,
                             "idDriver" to route.idDriver,
                             "createdItem" to route.createdItem,
-                            "startLat" to route.startPoint!!.latitude,
-                            "startLng" to route.startPoint!!.longitude,
-                            "endLat" to route.endPoint!!.latitude,
-                            "endLng" to route.endPoint!!.longitude,
                             "status" to route.status
                         )
-                        Log.d("onclickItemAdapter",route.toString())
                         findNavController().navigate(R.id.action_navigation_home_to_routeDetailsFragment,bundle)
                     }
                     binding.rvRoutes.layoutManager = LinearLayoutManager(context)

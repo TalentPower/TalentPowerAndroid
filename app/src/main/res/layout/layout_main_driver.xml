@@ -70,10 +70,58 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="50dp"
         android:layout_marginStart="50dp"
+        android:visibility="visible"
         android:layout_toEndOf="@+id/imgProfileDriverHome"
         android:layout_below="@id/txtNameDriverHome"
         android:text="Iniciar Ruta" />
 
+    <TextView
+        android:id="@+id/textView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/imgProfileDriverHome"
+        android:layout_below="@+id/txtNameDriverHome"
+        android:layout_marginTop="10sp"
+        android:visibility="gone"
+        android:layout_marginStart="15sp"
+        android:text="Tiempo aprox. de llegada:" />
+
+    <TextView
+        android:id="@+id/txtArrivalTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10sp"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:layout_toEndOf="@id/textView18"
+        android:visibility="gone"
+        android:layout_below="@+id/txtNameDriverHome"
+        android:text="10" />
+
+    <TextView
+        android:id="@+id/txtasd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/imgProfileDriverHome"
+        android:layout_below="@+id/txtArrivalTime"
+        android:layout_marginStart="15sp"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        android:text="Distancia Restante:" />
+
+    <TextView
+        android:id="@+id/txtKmtoTravel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/black"
+        android:layout_marginTop="5dp"
+        android:textSize="20sp"
+        android:visibility="gone"
+        android:layout_toEndOf="@id/textView18"
+        android:layout_below="@+id/txtArrivalTime"
+        android:text="10" />
 
 
 </RelativeLayout>

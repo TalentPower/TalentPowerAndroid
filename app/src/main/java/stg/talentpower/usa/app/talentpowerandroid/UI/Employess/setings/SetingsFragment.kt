@@ -8,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import dagger.hilt.android.AndroidEntryPoint
 import stg.talentpower.usa.app.talentpowerandroid.R
 import stg.talentpower.usa.app.talentpowerandroid.UI.Login.UI.AuthActivity
+import stg.talentpower.usa.app.talentpowerandroid.Util.disable
 import stg.talentpower.usa.app.talentpowerandroid.databinding.FragmentSetingsEmployessBinding
 
 @AndroidEntryPoint
@@ -41,21 +43,6 @@ class SetingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("lifecyc","onViewCreated")
 
-        model.getDataUser()
-
-        model.employee.observe(requireActivity()){ data->
-            binding.txtNameProfileEmployes.text=data.name
-            binding.txtPhoneProfileEmployes.text=data.phone
-            binding.txtAreaProfileEmployes.text=data.area
-            Glide.with(this) //1
-                .load("https://i.pinimg.com/474x/4d/69/98/4d6998832238bf2ed5a7195612401f11.jpg")
-                .placeholder(R.drawable.ic_acount_24)
-                .error(R.drawable.ic_image_error_24)
-                .skipMemoryCache(true) //2
-                .diskCacheStrategy(DiskCacheStrategy.NONE) //3
-                .transform(CircleCrop()) //4
-                .into(binding.imgProfileEmployes)
-        }
 
         binding.btnLogOut.setOnClickListener {
             model.logOut()
@@ -64,6 +51,44 @@ class SetingsFragment : Fragment() {
             activity?.finish()
         }
 
+        binding.cardAddEmployee.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_settings_employee_to_registerEmployessFragment2)
+        }
+        binding.cardAddRoute.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_settings_employee_to_addRouteFragment)
+        }
+
+        binding.cardAddClient.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_settings_employee_to_addClientFragment)
+        }
+
+        binding.cardAddDriver.setOnClickListener {
+            findNavController().navigate(R.id.action_navigation_settings_employee_to_addDriverFragment)
+        }
+
+
+
+        if (model.employee.value==null)model.getDataUser()
+
+        observers()
+    }
+
+    private fun observers(){
+        model.employee.observe(requireActivity()){ data->
+            if (data!=null){
+                binding.txtNameProfileEmployes.text=data.name
+                binding.txtPhoneProfileEmployes.text=data.phone
+                binding.txtAreaProfileEmployes.text=data.area
+                Glide.with(requireActivity()) //1
+                    .load("https://i.pinimg.com/474x/4d/69/98/4d6998832238bf2ed5a7195612401f11.jpg")
+                    .placeholder(R.drawable.ic_acount_24)
+                    .error(R.drawable.ic_image_error_24)
+                    .skipMemoryCache(true) //2
+                    .diskCacheStrategy(DiskCacheStrategy.NONE) //3
+                    .transform(CircleCrop()) //4
+                    .into(binding.imgProfileEmployes)
+            }
+        }
     }
 
     override fun onDestroyView() {

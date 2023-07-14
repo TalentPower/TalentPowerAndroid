@@ -104,6 +104,7 @@ object TimePickerHelper{
         }else{
             if (hr<12){
                 am_pm="AM"
+
             }else{
                 if (hr==12){
                     am_pm="PM"

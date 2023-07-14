@@ -251,9 +251,9 @@ class AddDriverFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        val nav=requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
-        nav.hide()
-        val toolbar=requireActivity().findViewById<Toolbar>(R.id.toolBarActivity)
-        toolbar.show()
+        //val nav=requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
+        //nav.hide()
+        //val toolbar=requireActivity().findViewById<Toolbar>(R.id.toolBarActivity)
+        //toolbar.show()
     }
 }

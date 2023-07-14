@@ -2,11 +2,9 @@ package stg.talentpower.usa.app.talentpowerandroid.UI.Driver.ui.home
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -16,7 +14,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -25,30 +22,16 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.database.FirebaseDatabase
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
-import com.mapbox.android.core.location.LocationEngineProvider
 import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.api.directions.v5.models.Bearing
 import com.mapbox.api.directions.v5.models.RouteOptions
-import com.mapbox.bindgen.Expected
 import com.mapbox.geojson.Point
-import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.EdgeInsets
-import com.mapbox.maps.MapView
-import com.mapbox.maps.Style
-import com.mapbox.maps.extension.style.expressions.dsl.generated.interpolate
 import com.mapbox.maps.plugin.LocationPuck2D
-import com.mapbox.maps.plugin.animation.MapAnimationOptions
 import com.mapbox.maps.plugin.animation.camera
-import com.mapbox.maps.plugin.animation.flyTo
 import com.mapbox.maps.plugin.gestures.OnMoveListener
 import com.mapbox.maps.plugin.gestures.gestures
-import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListener
-import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
 import com.mapbox.navigation.base.TimeFormat
 import com.mapbox.navigation.base.extensions.applyDefaultNavigationOptions
@@ -59,27 +42,17 @@ import com.mapbox.navigation.base.route.NavigationRoute
 import com.mapbox.navigation.base.route.NavigationRouterCallback
 import com.mapbox.navigation.base.route.RouterFailure
 import com.mapbox.navigation.base.route.RouterOrigin
-import com.mapbox.navigation.base.trip.model.RouteProgress
 import com.mapbox.navigation.core.MapboxNavigation
-import com.mapbox.navigation.core.directions.session.RoutesObserver
 import com.mapbox.navigation.core.formatter.MapboxDistanceFormatter
 import com.mapbox.navigation.core.lifecycle.MapboxNavigationApp
 import com.mapbox.navigation.core.lifecycle.MapboxNavigationObserver
 import com.mapbox.navigation.core.lifecycle.requireMapboxNavigation
-import com.mapbox.navigation.core.trip.session.LocationMatcherResult
-import com.mapbox.navigation.core.trip.session.LocationObserver
-import com.mapbox.navigation.core.trip.session.RouteProgressObserver
-import com.mapbox.navigation.core.trip.session.VoiceInstructionsObserver
-import com.mapbox.navigation.ui.base.util.MapboxNavigationConsumer
 import com.mapbox.navigation.ui.maneuver.api.MapboxManeuverApi
 import com.mapbox.navigation.ui.maps.NavigationStyles
 import com.mapbox.navigation.ui.maps.camera.NavigationCamera
 import com.mapbox.navigation.ui.maps.camera.data.MapboxNavigationViewportDataSource
 import com.mapbox.navigation.ui.maps.camera.lifecycle.NavigationBasicGesturesHandler
 import com.mapbox.navigation.ui.maps.camera.state.NavigationCameraState
-import com.mapbox.navigation.ui.maps.camera.transition.NavigationCameraTransitionOptions
-import com.mapbox.navigation.ui.maps.location.NavigationLocationProvider
-import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowApi
 import com.mapbox.navigation.ui.maps.route.arrow.api.MapboxRouteArrowView
 import com.mapbox.navigation.ui.maps.route.arrow.model.RouteArrowOptions
 import com.mapbox.navigation.ui.maps.route.line.api.MapboxRouteLineApi
@@ -93,19 +66,14 @@ import com.mapbox.navigation.ui.tripprogress.model.TimeRemainingFormatter
 import com.mapbox.navigation.ui.tripprogress.model.TripProgressUpdateFormatter
 import com.mapbox.navigation.ui.voice.api.MapboxSpeechApi
 import com.mapbox.navigation.ui.voice.api.MapboxVoiceInstructionsPlayer
-import com.mapbox.navigation.ui.voice.model.SpeechAnnouncement
-import com.mapbox.navigation.ui.voice.model.SpeechError
-import com.mapbox.navigation.ui.voice.model.SpeechValue
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import stg.talentpower.usa.app.talentpowerandroid.Model.Driver2
 import stg.talentpower.usa.app.talentpowerandroid.Model.LocationEvent
 import stg.talentpower.usa.app.talentpowerandroid.R
-import stg.talentpower.usa.app.talentpowerandroid.Util.LocationPermissionHelper
 import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
 import stg.talentpower.usa.app.talentpowerandroid.Util.Util
 import stg.talentpower.usa.app.talentpowerandroid.Util.hide
@@ -113,13 +81,8 @@ import stg.talentpower.usa.app.talentpowerandroid.Util.round
 import stg.talentpower.usa.app.talentpowerandroid.Util.show
 import stg.talentpower.usa.app.talentpowerandroid.Util.toast
 import stg.talentpower.usa.app.talentpowerandroid.databinding.FragmentHomeDriverBinding
-import java.lang.ref.WeakReference
-import java.time.LocalDateTime
-import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
-import kotlin.math.roundToInt
 
 
 @AndroidEntryPoint
@@ -360,7 +323,8 @@ class FragmentHomeDriver : Fragment(){
             }
             includeLayoutDriver.btnStartEndRoute.setOnClickListener {
                 //findRoute(Point.fromLngLat(-100.0088054,19.9164268,))
-                model.getPoints()
+                model.getEnd()
+
             }
         }
 
@@ -454,6 +418,14 @@ class FragmentHomeDriver : Fragment(){
     @RequiresApi(Build.VERSION_CODES.O)
     private fun observers(){
 
+        model.endPoint.observe(requireActivity()){
+            binding.includeLayoutDriver.btnStartEndRoute.hide()
+            binding.includeLayoutDriver.txtKmtoTravel.show()
+            binding.includeLayoutDriver.txtasd.show()
+            binding.includeLayoutDriver.txtArrivalTime.show()
+            binding.includeLayoutDriver.textView18.show()
+            findRoute(it)
+        }
         model.listPoint.observe(requireActivity()){list->
             if (list.isNotEmpty()){
                 //findRoute(list.last().location)
@@ -518,7 +490,7 @@ class FragmentHomeDriver : Fragment(){
         model.routeProgressObserverData.observe(requireActivity()){routeProgress->
             model.viewportDataSource.onRouteProgressChanged(routeProgress)
             model.viewportDataSource.evaluate()
-            lifecycleScope.launch (Dispatchers.IO){
+            lifecycleScope.launch{
                 val toTravelKm=(routeProgress.currentLegProgress!!.distanceRemaining/1000).toDouble().round(1)
                 val arrivalHrs = TimeUnit.SECONDS.toHours(routeProgress.currentLegProgress!!.durationRemaining.toLong()).toInt()
                 val arrivalMin= TimeUnit.SECONDS.toMinutes(routeProgress.currentLegProgress!!.durationRemaining.toLong()).toInt()
@@ -528,13 +500,13 @@ class FragmentHomeDriver : Fragment(){
                 if (arrivalHrs>0){
                     val suspMin=arrivalMin-arrivalHrs*60
                     Log.d("routeProgress","susp Min :$suspMin")
-                    val estimatedHrs= stg.talentpower.usa.app.talentpowerandroid.Util.Date.currentDataObject()!!.hour+arrivalHrs
-                    val estimatedMin= stg.talentpower.usa.app.talentpowerandroid.Util.Date.currentDataObject()!!.minute+suspMin
+                    var estimatedHrs= stg.talentpower.usa.app.talentpowerandroid.Util.Date.currentDataObject()!!.hour+arrivalHrs
+                    var estimatedMin= stg.talentpower.usa.app.talentpowerandroid.Util.Date.currentDataObject()!!.minute+suspMin
 
                     Log.d("routeProgress","Arriving aprox :$estimatedHrs : $estimatedMin")
                     if (suspMin>59){
-                        estimatedHrs
-                        estimatedMin-60
+                        estimatedHrs += 1
+                        estimatedMin -=60
                     }
                     val time= Util.DateHelper.returnTimeCasted(estimatedHrs,estimatedMin)
                     Log.d("routeProgress","El time :$time")
@@ -542,10 +514,13 @@ class FragmentHomeDriver : Fragment(){
                     var estimatedHrs= stg.talentpower.usa.app.talentpowerandroid.Util.Date.currentDataObject()!!.hour
                     var estimatedMin= stg.talentpower.usa.app.talentpowerandroid.Util.Date.currentDataObject()!!.minute+arrivalMin
                     if (estimatedMin>59){
-                        estimatedHrs -= 1
+                        estimatedHrs
                         estimatedMin -= 60
                     }
                     val time= Util.DateHelper.returnTimeCasted(estimatedHrs,estimatedMin)
+
+                    binding.includeLayoutDriver.txtArrivalTime.text="${time.hour}:${time.minute} ${time.period}"
+                    binding.includeLayoutDriver.txtKmtoTravel.text=toTravelKm.toString()+" Km"
                     Log.d("routeProgress","El time :$time")
                 }
             }

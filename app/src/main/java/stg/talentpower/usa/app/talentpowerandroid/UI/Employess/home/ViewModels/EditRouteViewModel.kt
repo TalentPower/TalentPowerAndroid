@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.GeoPoint
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import stg.talentpower.usa.app.talentpowerandroid.Model.Route
 import stg.talentpower.usa.app.talentpowerandroid.Model.Stop
@@ -34,43 +35,30 @@ class EditRouteViewModel @Inject constructor(
     private var _registerRoute= MutableLiveData<UiState<String>>()
     val registerRoute:LiveData<UiState<String>> get() = _registerRoute
 
-    private val _routesList = MutableLiveData<UiState<List<Route>>?>()
-    val routesList: MutableLiveData<UiState<List<Route>>?> get() = _routesList
-
     private var _LastLocation= MutableLiveData<LatLng>()
     val lastLocation:LiveData<LatLng> get() = _LastLocation
 
     private var _address=MutableLiveData<String>()
     val addres:LiveData<String> get() = _address
 
-    private val _getStops = MutableLiveData<UiState<List<Stop>>>()
-    val stops: LiveData<UiState<List<Stop>>> get() = _getStops
+    private val _stops = MutableLiveData<UiState<List<Stop>>>()
+    val stops: LiveData<UiState<List<Stop>>> get() = _stops
 
     private val _stopStatus = MutableLiveData<UiState<String>>()
     val stopStatus: LiveData<UiState<String>> get() = _stopStatus
 
     fun setStart(data:LatLng){
-        Log.d("latnlg","Hice el setStart $data")
-        _start.postValue(data)
-        Log.d("latnlg","value del start ${start.value}")
+        _start.value=data
     }
 
     fun setEnd(data: LatLng){
-        _end.postValue(data)
-    }
-
-    fun getRoutes(){
-        viewModelScope.launch {
-            firebase.getRoutes {
-                _routesList.postValue(it)
-            }
-        }
+        _end.value=data
     }
 
     fun getStops(id:String){
-        viewModelScope.launch {
-            firebase.getStops(id){
-                _getStops.value=it
+        viewModelScope.launch (Dispatchers.IO){
+            firebase.getStops(id).collect{
+                _stops.postValue(it)
             }
         }
     }
@@ -105,10 +93,6 @@ class EditRouteViewModel @Inject constructor(
         firebase.deleteStop(idRoute,obj){
             _stopStatus.value=it
         }
-    }
-
-    fun stopListener(){
-        firebase.stopQueryListener()
     }
 
 }

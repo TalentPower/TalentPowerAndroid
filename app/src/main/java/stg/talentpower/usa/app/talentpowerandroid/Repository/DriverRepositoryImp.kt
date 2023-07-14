@@ -8,13 +8,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.database.ktx.snapshots
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
@@ -22,11 +17,8 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -43,6 +35,7 @@ import stg.talentpower.usa.app.talentpowerandroid.Util.FireStoreDocumentSubcolec
 import stg.talentpower.usa.app.talentpowerandroid.Util.FirebaseStorageConstants.NOTE_IMAGES
 import stg.talentpower.usa.app.talentpowerandroid.Util.SharedPrefConstants
 import stg.talentpower.usa.app.talentpowerandroid.Util.UiState
+
 
 class DriverRepositoryImp(
     val auth: FirebaseAuth,
@@ -103,17 +96,29 @@ class DriverRepositoryImp(
             }
     }
     fun updateDriverInfo(driver: Driver, result: (UiState<String>) -> Unit) {
+
         val document = database.collection("users").document(Country.MEXICO).collection(Cities.QUERETARO).document(driver.id)
         document.set(driver)
             .addOnSuccessListener {
                 uploadMultipleFile(driver.id,driver.images){ state->
                     when(state){
-                        is UiState.Loading-> TODO()
+                        is UiState.Loading-> {}
                         is UiState.Failure->{
                             result.invoke(UiState.Failure(state.error))
                         }
                         is UiState.Success->{
-                            result.invoke(UiState.Success("Success"))
+                            val map = HashMap<String, String>()
+                            map["latitude"] = "0.0"
+                            map["longitude"] = "0.0"
+                            map["status"] = "0"
+                            realtimeDatabase.getReference("drivers").child(driver.id).setValue(map).addOnCompleteListener{task->
+                                if (task.isSuccessful){
+                                    result.invoke(UiState.Success("Success"))
+                                }
+                            }.addOnFailureListener {
+                                result.invoke(UiState.Failure("Success"))
+                            }
+
                         }
                     }
                 }
@@ -171,6 +176,7 @@ class DriverRepositoryImp(
                 .document(Country.MEXICO)
                 .collection(Cities.QUERETARO)
                 .whereEqualTo("rol","driver")
+                .whereEqualTo("route","")
                 .get()
                 .await()
                 .toObjects(Driver2::class.java)
@@ -186,7 +192,6 @@ class DriverRepositoryImp(
         }catch (e:Exception){
             e.localizedMessage?.let { Log.d("exepcion", it) }
         }
-
     }
     override suspend fun checkInOut(idUser:String,idRoute:String,isCheked:Boolean,onResult:(UiState<String>)-> Unit) {
         try {

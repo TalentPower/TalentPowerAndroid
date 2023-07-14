@@ -71,8 +71,9 @@ object RepositoryModule {
     @Singleton
     fun provideRoutehRepository(
         database: FirebaseFirestore,
+        realtimeDatabase: FirebaseDatabase,
     ):RouteRepository{
-        return RouteRepositoryImp(database)
+        return RouteRepositoryImp(database,realtimeDatabase)
     }
 
     @Provides

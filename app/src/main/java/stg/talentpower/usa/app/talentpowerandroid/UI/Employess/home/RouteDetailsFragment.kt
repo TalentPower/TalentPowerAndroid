@@ -1,5 +1,6 @@
 package stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
@@ -53,6 +54,7 @@ class RouteDetailsFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("NewApi")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -78,6 +80,7 @@ class RouteDetailsFragment : Fragment() {
                         data.data.forEach {
                             list.add(it.name)
                         }
+                        list.removeIf { it.contains("Final") }
                         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, list)
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                         spDriver.adapter=adapter
@@ -112,6 +115,7 @@ class RouteDetailsFragment : Fragment() {
                 obj.asignedRoute=route.name
                 obj.asignedStop=selectedRoute
                 obj.asignedClient=route.client
+                Log.d("addWorker",obj.toString())
                 model.addWorker(obj)
             }
             dialog.show()
@@ -146,7 +150,7 @@ class RouteDetailsFragment : Fragment() {
         model.addWorker.observe(requireActivity()){ worker->
             if (worker!=null){
                 when(worker){
-                    is UiState.Loading->TODO()
+                    is UiState.Loading->{ }
 
                     is UiState.Failure->{
                         if(model.stops.hasObservers()) model.stops.removeObservers(requireActivity())
@@ -168,10 +172,10 @@ class RouteDetailsFragment : Fragment() {
                 "name" to route.name,
                 "client" to route.client,
                 "driver" to route.driver,
-                "startLat" to route.startPoint!!.latitude,
-                "startLng" to route.startPoint!!.longitude,
-                "endLat" to route.endPoint!!.latitude,
-                "endLng" to route.endPoint!!.longitude,
+                //"startLat" to route.startPoint!!.latitude,
+                //"startLng" to route.startPoint!!.longitude,
+                //"endLat" to route.endPoint!!.latitude,
+                //"endLng" to route.endPoint!!.longitude,
             )
             findNavController().navigate(R.id.action_routeDetailsFragment_to_editRouteFragment,bundle)
         }
@@ -207,8 +211,8 @@ class RouteDetailsFragment : Fragment() {
             route.noRealWorkers=arguments?.getInt("noRealWorkers")!!
             route.idDriver= arguments?.getString("idDriver")!!
             route.status= arguments?.getString("status")!!
-            route.startPoint= GeoPoint(requireArguments().getDouble("startLat"), requireArguments().getDouble("startLng"))
-            route.endPoint= GeoPoint(requireArguments().getDouble("endLat"), requireArguments().getDouble("endLng"))
+           // route.startPoint= GeoPoint(requireArguments().getDouble("startLat"), requireArguments().getDouble("startLng"))
+            //route.endPoint= GeoPoint(requireArguments().getDouble("endLat"), requireArguments().getDouble("endLng"))
 
             binding.txtDriverRouteDetails.text="Conductor: ${route.driver}"
             binding.txtClientRouteDetails.text="Cliente:${route.client}"
@@ -226,10 +230,10 @@ class RouteDetailsFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        val nav=requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
-        nav.hide()
-        val toolbar=requireActivity().findViewById<Toolbar>(R.id.toolBarActivity)
-        toolbar.show()
+        //val nav=requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
+        //nav.hide()
+        //val toolbar=requireActivity().findViewById<Toolbar>(R.id.toolBarActivity)
+        //toolbar.show()
     }
 
     override fun onDestroyView() {

@@ -10,9 +10,6 @@
         android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home_employess" >
-        <action
-            android:id="@+id/action_navigation_home_to_addDriverFragment"
-            app:destination="@id/addDriverFragment" />
 
         <action
             android:id="@+id/action_navigation_home_to_routeDetailsFragment"
@@ -21,12 +18,7 @@
             app:exitAnim="@anim/slide_out"
             app:popEnterAnim="@anim/slide_in"
             app:popExitAnim="@anim/slide_out"/>
-        <action
-            android:id="@+id/action_navigation_home_to_addRouteFragment"
-            app:destination="@id/addRouteFragment" />
-        <action
-            android:id="@+id/action_navigation_home_to_addClientFragment"
-            app:destination="@id/addClientFragment" />
+
     </fragment>
 
     <fragment
@@ -39,7 +31,20 @@
         android:id="@+id/navigation_settings_employee"
         android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.setings.SetingsFragment"
         android:label="@string/title_settings"
-        tools:layout="@layout/fragment_setings_employess" />
+        tools:layout="@layout/fragment_setings_employess" >
+        <action
+            android:id="@+id/action_navigation_settings_employee_to_registerEmployessFragment2"
+            app:destination="@id/registerEmployessFragment2" />
+        <action
+            android:id="@+id/action_navigation_settings_employee_to_addRouteFragment"
+            app:destination="@id/addRouteFragment" />
+        <action
+            android:id="@+id/action_navigation_settings_employee_to_addDriverFragment"
+            app:destination="@id/addDriverFragment" />
+        <action
+            android:id="@+id/action_navigation_settings_employee_to_addClientFragment"
+            app:destination="@id/addClientFragment" />
+    </fragment>
     <fragment
         android:id="@+id/addDriverFragment"
         android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.AddDriverFragment"
@@ -96,6 +101,11 @@
         android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Employess.home.StartEndStopsFragment"
         android:label="StartEndStopsFragment"
         tools:layout="@layout/start_end_stops_fragment"/>
+    <fragment
+        android:id="@+id/registerEmployessFragment2"
+        android:name="stg.talentpower.usa.app.talentpowerandroid.UI.Login.UI.RegisterEmployessFragment"
+        android:label="RegisterEmployessFragment"
+        tools:layout="@layout/fragment_register_employess"/>
 
 
 </navigation>

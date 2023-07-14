@@ -57,7 +57,7 @@ class StartEndStopsFragment : Fragment() {
 
         when(intent){
             "endRoute"->{
-                binding.tfNameStopStartStop.hide()
+                //binding.tfNameStopStartStop.hide()
             }
         }
 
@@ -101,7 +101,7 @@ class StartEndStopsFragment : Fragment() {
                             "startCoordLng" to data.longitude,
                             "startTime" to binding.btnHoursStartStop.text.toString(),
                             "startAddress" to model.addres.value,
-                            "startName" to binding.tfNameStopStartStop.text.toString())
+                            "startName" to "Inicio Ruta: "+binding.tfNameStopStartStop.text.toString())
                         )
                         view.post {
                             findNavController().popBackStack()
@@ -115,8 +115,8 @@ class StartEndStopsFragment : Fragment() {
                             "endCoordLat" to data.latitude,
                             "endCoordLng" to data.longitude,
                             "endTime" to binding.btnHoursStartStop.text.toString(),
-                            "endAddress" to model.addres.value
-                        )
+                            "endAddress" to model.addres.value,
+                            "endName" to "Final Ruta"+binding.tfNameStopStartStop.text.toString())
                         )
                         view.post {
                             findNavController().popBackStack()
